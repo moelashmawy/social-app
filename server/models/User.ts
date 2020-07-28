@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
@@ -9,12 +9,12 @@ const UserSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     pictures: { type: Array },
+    role: { type: String, required: true },
     friends: { type: [Schema.Types.ObjectId], ref: "User" },
-    chats: { type: [Schema.Types.ObjectId], ref: "Chat" },
-    role: { type: String, required: true }
+    chats: { type: [Schema.Types.ObjectId], ref: "Chat" }
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", UserSchema);
-export default User;
+const NewUser = mongoose.model("NewUser", UserSchema);
+export default NewUser;

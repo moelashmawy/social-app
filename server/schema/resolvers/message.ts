@@ -2,10 +2,10 @@ import db from "./../dummy";
 
 const messageResolver = {
   Query: {
-    messages: () => db.messages
+    allMessages: () => db.messages
   },
   Message: {
-    user: (message: { user: string }) => db.users.find(user => user.id === message.user)
+    user: (paren: { user: string }) => db.users.find(user => user.id === paren.user)
   }
 };
 

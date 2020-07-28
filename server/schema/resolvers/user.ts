@@ -1,10 +1,29 @@
 import db from "./../dummy";
+import NewUser from "./../../models/User";
 
 const userResolver = {
   Query: {
-    users: () => db.users,
-    user: (parent: any, args: { id: string }) =>
-      db.users.find(user => user.id === args.id)
+    users: () => NewUser.find(),
+    userInfo: (parent: any, { id }) => {
+      return NewUser.findById(id);
+    }
+  },
+  User: {
+    messages: (parent: any) => db.messages.filter(message => message.user === parent.id)
+  },
+  Mutation: {
+    signUp: (parent: any, { userName, email, password, firstName, lastName, role }) => {
+      const newUser = new NewUser({
+        userName,
+        email,
+        password,
+        firstName,
+        lastName,
+        role
+      });
+
+      return newUser.save();
+    }
   }
 };
 

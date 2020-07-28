@@ -1,21 +1,32 @@
 //This defines the user typeDef
 const userTypeDef = `
-extend type Query {
-    users:[User!]
-    user(id: ID!): User!
-  }
-
-  type User {
-    id: ID!
-    name: String!
+type User {
+    id: ID
+    userName: String!
     email: String!
+    firstName: String!
+    lastName: String!
     avatarUrl: String
     role: String!
+    friends:[User!]
     chat:[Chat!]
+    messages:[Message!]
+  }
+
+  extend type Query {
+    users:[User!] 
+    userInfo(id: ID!): User!
   }
 
   extend type Mutation {
-    signUp(name: String!, email: String!, password: String!, role: String!): User!
+    signUp(
+      userName: String!,
+      email: String!,
+      password: String!,
+      firstName: String!,
+      lastName: String!,
+      role: String!
+    ): User!
   }
 `;
 

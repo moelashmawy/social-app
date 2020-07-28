@@ -1,3 +1,4 @@
+/* This dummy data i use to test my application before connectig to the db */
 export default {
   users: [
     { id: "1", name: "momo", email: "momo@yahoo" },
