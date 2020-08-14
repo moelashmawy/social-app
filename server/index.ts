@@ -1,30 +1,34 @@
 import { GraphQLServer } from "graphql-yoga";
-import schema from "./schema";
-import * as mongoose from "mongoose";
-
-// Database configuration
-mongoose.connect(process.env.DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-});
-
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "error: unable to connect to database"));
-db.once("open", function () {
-  console.log("Conncted to database successfully...");
-});
+import { connectDb } from "./db";
+import typeDefs from "./schema/typeDefs";
+import resolvers from "./schema/resolvers";
 
 // Creating our graphQL server with the schema defined
-const server = new GraphQLServer(schema);
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context: ({ request, response }) => {
+    return {
+      req: request,
+      res: response,
+      token: request.headers.token
+    };
+  }
+});
+
+// database connection
+connectDb();
 
 // Server connection options
 const options = {
   port: 5000,
   endpoint: "/graphql",
   subscriptions: "/subscriptions",
-  playground: "/graphql"
+  playground: "/graphql",
+  cors: {
+    credentials: true,
+    origin: ["http://localhost:3000"] // your frontend url.
+  }
 };
 
 // starting the server on port 5000

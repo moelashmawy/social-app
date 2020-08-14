@@ -1,39 +1,44 @@
 import Head from "next/head";
-import Link from "next/link";
-import Layout from "./../components/Layout";
-import db from "./../lib";
+import Layout from "../components/Layout";
+import { initializeApollo } from "../lib/apollo";
+import UsersList from "../components/UsersList";
+import { ALL_USERS_QUERY } from "../graphql/queries";
+import { TokenContext } from "./_app";
+import { useContext } from "react";
 
-export default function Home(props) {
+function Home(props) {
+  const token = useContext(TokenContext);
+
   return (
     <Layout>
-      <div>
-        <Head>
-          <title>Social App</title>
-          <link rel='icon' href='/favicon.ico' />
-        </Head>
-      </div>
+      <Head>
+        <title>Social App</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
 
-      <ul>
-        {props.users.map(({ id, name, email }) => (
-          <li key={id}>
-            <Link href={"users/[id]"} as={`users/${id}`}>
-              <a>{name}</a>
-            </Link>
-            <br />
-            {id}
-            <br />
-            {email}
-          </li>
-        ))}
-      </ul>
+      <UsersList />
     </Layout>
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(ctx) {
+  const apolloClient = initializeApollo();
+
+  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
+
+  const allUsers = await apolloClient.query({
+    query: ALL_USERS_QUERY,
+    context: { headers: { token: token } }
+  });
+
+  const users = allUsers.data.users;
+
   return {
     props: {
-      users: db.users
+      initialApolloState: apolloClient.cache.extract(),
+      users
     }
   };
 }
+
+export default Home;
