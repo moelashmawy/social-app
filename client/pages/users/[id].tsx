@@ -3,15 +3,14 @@ import { initializeApollo } from "../../lib/apollo";
 import { useQuery } from "@apollo/client";
 import Layout from "../../components/Layout";
 import ErrorMessage from "../../components/ToastMessage";
-import { TokenContext } from "../_app";
-import { ONE_USER_QUERY } from "../../graphql/queries";
+import { ONE_USER_QUERY, ME_QUERY } from "../../graphql/queries";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 function User(props) {
-  let router = useRouter();
+  console.log(props);
 
-  const token = useContext(TokenContext);
+  let router = useRouter();
 
   const { loading, data } = useQuery(ONE_USER_QUERY, {
     variables: { id: router.query.id },
@@ -51,8 +50,6 @@ export async function getServerSideProps(ctx) {
   // get the cookies from the headers in the request object
   const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
 
-  console.log(ctx.req.headers);
-
   let oneUserQuery = await apolloClient.query({
     query: ONE_USER_QUERY,
     variables: { id: ctx.params.id },
@@ -61,10 +58,24 @@ export async function getServerSideProps(ctx) {
 
   let user = oneUserQuery.data.userInfo;
 
+  let meQuery = await apolloClient.query({
+    query: ME_QUERY,
+    context: { headers: { token: token } }
+  });
+
+  let me = meQuery.data.me;
+
+  if (me.user == null && !me.ok) {
+    ctx.res.setHeader("location", "/login");
+    ctx.res.statusCode = 302;
+    ctx.res.end();
+  }
+
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      user
+      user,
+      me
     }
   };
 }

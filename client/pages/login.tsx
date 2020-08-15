@@ -73,18 +73,3 @@ export default function login() {
     </Layout>
   );
 }
-
-// Fetch necessary data for the blog post using params.id
-export const getServerSideProps = async ctx => {
-  const apolloClient = initializeApollo();
-
-  // get the cookies from the headers in the request object
-  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
-
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-      token
-    }
-  };
-};

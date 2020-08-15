@@ -8,16 +8,19 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useMutation } from "@apollo/client";
 import { LOGOUT_MUTATION } from "../graphql/mutations";
+import { useRouter } from "next/router";
 
 function Header() {
   const [logout, { data, loading, error }] = useMutation(LOGOUT_MUTATION, {
     onError(error) {
       //console.log(error);
     },
-    onCompleted() {
-      console.log("logged out");
-    }
+    onCompleted() {}
   });
+
+  if (data?.logout.ok) {
+    useRouter().push("/");
+  }
 
   return (
     <div>

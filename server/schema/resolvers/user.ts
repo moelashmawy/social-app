@@ -8,7 +8,25 @@ import { userAuth, adminAuth } from "../../middlewares/auth";
 
 const userResolver = {
   Query: {
-    me: (_, __, { req, res }) => {},
+    me: async (_, __, { req, res }) => {
+      try {
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        let me = User.findById(myId).exec();
+
+        return {
+          ok: true,
+          user: me
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          error: error.message
+        };
+      }
+    },
     users: async (parent: any, { id }, { req, res }) => {
       try {
         await userAuth(req);
@@ -36,7 +54,6 @@ const userResolver = {
           ok: false,
           error: error.message
         };
-        //return new GraphQLError(error);
       }
     }
   },
@@ -130,7 +147,7 @@ const userResolver = {
       });
 
       return {
-        logout: true
+        ok: true
       };
     },
     // Delete user mutation

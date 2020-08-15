@@ -60,7 +60,7 @@ export const MUTATION_DELETE_USER = gql`
 export const LOGOUT_MUTATION = gql`
   mutation logout {
     logout {
-      logout
+      ok
     }
   }
 `;

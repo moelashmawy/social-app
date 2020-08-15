@@ -23,7 +23,7 @@ const userTypeDef = `
   } 
 
   type LogoutPayload{
-    logout: Boolean!
+    ok: Boolean!
   } 
 
   type DeleteUserPayload{
@@ -44,7 +44,7 @@ const userTypeDef = `
   }
 
   extend type Query {
-    me: User
+    me: OneUserQuery!
     users: AllUsersQuery! 
     userInfo(id: ID!): OneUserQuery!
   }

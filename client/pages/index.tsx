@@ -3,12 +3,9 @@ import Layout from "../components/Layout";
 import { initializeApollo } from "../lib/apollo";
 import UsersList from "../components/UsersList";
 import { ALL_USERS_QUERY } from "../graphql/queries";
-import { TokenContext } from "./_app";
 import { useContext } from "react";
 
 function Home(props) {
-  const token = useContext(TokenContext);
-
   return (
     <Layout>
       <Head>
