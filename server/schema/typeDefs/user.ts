@@ -1,5 +1,15 @@
 //This defines the user typeDef
 const userTypeDef = `
+  scalar Upload
+
+  type File {
+    id: ID!
+    path: String!
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
   type User {
     id: ID
     userName: String!
@@ -7,6 +17,7 @@ const userTypeDef = `
     password: String!
     firstName: String!
     lastName: String!
+    pictures: [String!]
     avatarUrl: String
     role: String!
     friends:[User!]
@@ -43,10 +54,14 @@ const userTypeDef = `
     error: String
   }
 
+  type UploadPic{
+    ok: Boolean!
+  }
+
   extend type Query {
     me: OneUserQuery!
     users: AllUsersQuery! 
-    userInfo(id: ID!): OneUserQuery!
+    userInfo(userName: String!): OneUserQuery!
   }
 
   extend type Mutation {
@@ -64,6 +79,8 @@ const userTypeDef = `
     logout: LogoutPayload
 
     deleteUser(id:ID!): DeleteUserPayload
+
+    singleUpload(file: [Upload!]): UploadPic!
   }
 `;
 
