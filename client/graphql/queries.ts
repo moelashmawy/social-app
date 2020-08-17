@@ -12,14 +12,15 @@ export const ME_QUERY = gql`
         firstName
         lastName
         createdAt
+        pictures
       }
     }
   }
 `;
 
 export const ONE_USER_QUERY = gql`
-  query userInfo($id: ID!) {
-    userInfo(id: $id) {
+  query userInfo($userName: String!) {
+    userInfo(userName: $userName) {
       ok
       error
       user {
@@ -29,6 +30,7 @@ export const ONE_USER_QUERY = gql`
         firstName
         lastName
         createdAt
+        pictures
       }
     }
   }
