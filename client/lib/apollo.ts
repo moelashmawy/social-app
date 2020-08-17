@@ -1,20 +1,21 @@
 import { useMemo } from "react";
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import Cookies from "js-cookie";
 import fetch from "isomorphic-unfetch";
+import { createUploadLink } from "apollo-upload-client";
 
-//let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
-let apolloClient;
-let token;
+let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
+let token: string;
 const isBrowser = typeof window !== "undefined";
 
-const httpLink = new HttpLink({
+const httpLink = createUploadLink({
   uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
 
+// will user `setContext` to send the token with every request
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from protected route context
   if (typeof window !== "undefined") {
@@ -33,10 +34,11 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// create an apollo client
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: !isBrowser,
-    link: authLink.concat(httpLink),
+    link: authLink.concat(httpLink as any),
     cache: new InMemoryCache()
   });
 }
