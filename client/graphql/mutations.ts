@@ -64,3 +64,11 @@ export const LOGOUT_MUTATION = gql`
     }
   }
 `;
+
+export const UPLOAD_PICTURES = gql`
+  mutation singleUpload($file: [Upload!]) {
+    singleUpload(file: $file) {
+      ok
+    }
+  }
+`;
