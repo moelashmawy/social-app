@@ -3,11 +3,10 @@ import User from "./../../models/User";
 import { signupvalidatation } from "./../../middlewares/validation/userValidation";
 import { loginValidatation } from "./../../middlewares/validation/userValidation";
 import * as jwt from "jsonwebtoken";
-import * as shortid from "shortid";
 import { userAuth, adminAuth } from "../../middlewares/auth";
-import { createWriteStream } from "fs";
-import * as mkdirp from "mkdirp";
+var cloudinary = require("cloudinary").v2;
 
+/* // in case for local upload
 const uploadDir = "./client/public/images/users_images";
 
 // Ensure upload directory exists
@@ -34,6 +33,44 @@ const processUpload = async (upload: any) => {
   console.log(path, fileName);
 
   return { path, fileName };
+}; */
+
+let resultUrl = "",
+  resultSecureUrl = "";
+
+const cloudinaryUpload = async ({ stream }) => {
+  const cloudinary = require("cloudinary");
+  cloudinary.config({
+    cloud_name: "hamohuh",
+    api_key: "838736889631699",
+    api_secret: "4V8gR-toRb1FCVmfmD5nM-mGL5M"
+  });
+
+  try {
+    await new Promise((resolve, reject) => {
+      const streamLoad = cloudinary.v2.uploader.upload_stream(function (error, result) {
+        if (result) {
+          resultUrl = result.secure_url;
+          resultSecureUrl = result.secure_url;
+          resolve(resultUrl);
+        } else {
+          reject(error);
+        }
+      });
+
+      stream.pipe(streamLoad);
+    });
+  } catch (err) {
+    throw new Error(`Failed to upload profile picture ! Err:${err.message}`);
+  }
+};
+
+const processUpload = async (upload: any) => {
+  const { createReadStream } = await upload;
+  const stream = createReadStream();
+
+  await cloudinaryUpload({ stream });
+  return resultUrl;
 };
 
 const userResolver = {
@@ -222,7 +259,7 @@ const userResolver = {
         let myId = req.user.userId;
 
         await Promise.all(file.map(processUpload)).then(res => {
-          const newPics = res.map((image: any) => image.fileName);
+          const newPics: any = res;
 
           User.findByIdAndUpdate(
             { _id: myId },
