@@ -2,14 +2,6 @@
 const userTypeDef = `
   scalar Upload
 
-  type File {
-    id: ID!
-    path: String!
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
-
   type User {
     id: ID
     userName: String!
@@ -54,7 +46,7 @@ const userTypeDef = `
     error: String
   }
 
-  type UploadPic{
+  type PicturePayload{
     ok: Boolean!
   }
 
@@ -80,7 +72,7 @@ const userTypeDef = `
 
     deleteUser(id:ID!): DeleteUserPayload
 
-    singleUpload(file: [Upload!]): UploadPic!
+    singleUpload(file: [Upload!]): PicturePayload!
   }
 `;
 
