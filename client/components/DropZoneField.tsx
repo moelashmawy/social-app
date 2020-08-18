@@ -8,6 +8,7 @@ import { gql, useMutation } from "@apollo/client";
 import ErrorMessage from "../components/ToastMessage";
 import Router from "next/router";
 import { REGISTER_MUTATION, UPLOAD_PICTURES } from "../graphql/mutations";
+import axios from "axios";
 
 export default function DropZoneField() {
   const [imgs, setImgs] = useState(null);
@@ -18,13 +19,6 @@ export default function DropZoneField() {
     }
   });
 
-  /* if (data) {
-    console.log(data);
-  }
-
-  if (error) {
-    console.log(error);
-  } */
   return (
     <>
       <Formik
