@@ -29,9 +29,7 @@ function MyProfile(props) {
             <div>{me.createdAt}</div>
             <div>{me.createdAt}</div>
             {me?.pictures.length > 0 &&
-              me.pictures.map((pic, index) => (
-                <img key={index} src={`/images/users_images/${pic}`} />
-              ))}
+              me.pictures.map((pic, index) => <img key={index} src={`${pic}`} />)}
           </div>
           <DropZoneField />
         </>
