@@ -21,7 +21,7 @@ function User(props) {
 
   // here we decide whether to render a regular profile
   // or if the username in the url is my username, render my profile
-  if (myProfile?.userName == user.userName) {
+  if (myProfile?.userName == user?.userName) {
     return <MyProfile me={myProfile} />;
   }
 

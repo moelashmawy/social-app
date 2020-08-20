@@ -36,7 +36,13 @@ export const signupvalidatation = Yup.object().shape({
     .required("first Name is required"),
   lastName: Yup.string()
     .min(2, "Must be more than one character")
-    .required("lastName is required")
+    .required("lastName is required"),
+  gender: Yup.string()
+    .min(2, "Must be more than one character")
+    .required("Gender is required"),
+  country: Yup.string()
+    .min(2, "Must be more than one character")
+    .required("Country is required")
 });
 
 // validate user inputs using Yup

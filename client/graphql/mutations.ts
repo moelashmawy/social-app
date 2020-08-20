@@ -8,6 +8,8 @@ export const REGISTER_MUTATION = gql`
     $verifyPassword: String!
     $firstName: String!
     $lastName: String!
+    $gender: String!
+    $country: String!
   ) {
     signUp(
       userName: $userName
@@ -16,16 +18,11 @@ export const REGISTER_MUTATION = gql`
       verifyPassword: $verifyPassword
       firstName: $firstName
       lastName: $lastName
+      gender: $gender
+      country: $country
     ) {
       ok
-      token
-      user {
-        id
-        userName
-        firstName
-        lastName
-        email
-      }
+      successMessage
       error
     }
   }
@@ -35,14 +32,7 @@ export const LOGIN_MUTATION = gql`
   mutation login($userName: String!, $password: String!) {
     login(userName: $userName, password: $password) {
       ok
-      token
-      user {
-        id
-        userName
-        firstName
-        lastName
-        email
-      }
+      successMessage
       error
     }
   }
@@ -52,6 +42,7 @@ export const MUTATION_DELETE_USER = gql`
   mutation deleteUser($id: ID!) {
     deleteUser(id: $id) {
       ok
+      successMessage
       error
     }
   }
@@ -66,9 +57,10 @@ export const LOGOUT_MUTATION = gql`
 `;
 
 export const UPLOAD_PICTURES = gql`
-  mutation singleUpload($file: [Upload!]) {
-    singleUpload(file: $file) {
+  mutation uploadProfilePictures($file: [Upload!]) {
+    uploadProfilePictures(file: $file) {
       ok
+      successMessage
     }
   }
 `;

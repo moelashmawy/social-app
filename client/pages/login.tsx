@@ -26,13 +26,14 @@ export default function login() {
 
   const handleRegisterSuccess = () => {
     if (data?.login?.ok) {
-      useRouter().push("/");
+      useRouter().replace("/homePage");
+
       return <ErrorMessage message='Logged in successfully' case='success' />;
     }
   };
 
   return (
-    <Layout>
+    <>
       {loading && <div>logging in.....</div>}
       {data?.login?.error && <ErrorMessage message={data.login.error} case='error' />}
 
@@ -70,6 +71,6 @@ export default function login() {
           </Button>
         </Form>
       </Formik>
-    </Layout>
+    </>
   );
 }

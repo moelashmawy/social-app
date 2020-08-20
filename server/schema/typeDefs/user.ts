@@ -9,18 +9,34 @@ const userTypeDef = `
     password: String!
     firstName: String!
     lastName: String!
+    gender: String
+    country: String
+    city: String
     pictures: [String!]
     avatarUrl: String
     role: String!
-    friends:[User!]
-    chat:[Chat!]
-    messages:[Message!]
-    createdAt:String
+    birthday: String
+    friends: [User!]
+    chats: [Chat!]
+    messages: [Message]
+    status: String
+    speakLanguages: [String!]
+    learnLanguages: [String!]
+    education: String
+    job: String
+    relationship: String
+    aboutMe: String
+    hobbies: [String!]
+    music: [String!]
+    books: [String!]
+    movies: [String!]
+    tvShows: [String!]
+    createdAt: String!
   }
 
   type UserPayload{
     ok: Boolean!
-    token: String
+    successMessage: String
     error: String
     user: User
   } 
@@ -31,6 +47,7 @@ const userTypeDef = `
 
   type DeleteUserPayload{
     ok: Boolean!
+    successMessage: String
     error: String
   }
 
@@ -46,8 +63,9 @@ const userTypeDef = `
     error: String
   }
 
-  type PicturePayload{
+  type UploadProfilePicturesPayload{
     ok: Boolean!
+    successMessage: String
   }
 
   extend type Query {
@@ -63,7 +81,9 @@ const userTypeDef = `
       password: String!,
       verifyPassword: String!,
       firstName: String!,
-      lastName: String!
+      lastName: String!,
+      gender: String!,
+      country: String!
     ): UserPayload!
 
     login(userName: String!, password: String!): UserPayload!
@@ -72,7 +92,7 @@ const userTypeDef = `
 
     deleteUser(id:ID!): DeleteUserPayload
 
-    singleUpload(file: [Upload!]): PicturePayload!
+    uploadProfilePictures(file: [Upload!]): UploadProfilePicturesPayload!
   }
 `;
 

@@ -6,10 +6,8 @@ import { useState } from "react";
 import { MUTATION_DELETE_USER } from "../graphql/mutations";
 import { ALL_USERS_QUERY } from "../graphql/queries";
 
-export default function UsersList() {
-  const { loading, data } = useQuery(ALL_USERS_QUERY);
-
-  const { users } = data.users;
+export default function UsersList(props) {
+  const { users, error, ok } = props.users;
 
   let [deleteUserMutation, { data: mutation_data, loading: l }] = useMutation(
     MUTATION_DELETE_USER
@@ -17,8 +15,7 @@ export default function UsersList() {
 
   return (
     <>
-      {data?.users?.error && <div>{data.users.error}</div>}
-      {loading && <div>Loading.....</div>}
+      {error && <div>{error}</div>}
       {mutation_data?.deleteUser?.ok && (
         <ErrorMessage message='Deleted Successfully' case='success' />
       )}
@@ -26,10 +23,10 @@ export default function UsersList() {
         <ErrorMessage message={mutation_data.deleteUser.error} case='error' />
       )}
       <ul>
-        {data?.users?.users &&
+        {users &&
           users.map(user => (
             <li key={user.id}>
-              <Link href={"/users/[id]"} as={`/users/${user.id}`}>
+              <Link href={"/users/[userName]"} as={`/users/${user.userName}`}>
                 <a>{user.userName}</a>
               </Link>
               <div>{user.userName}</div>

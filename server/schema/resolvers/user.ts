@@ -98,7 +98,7 @@ const userResolver = {
     // all users query
     users: async (parent: any, { id }, { req, res }) => {
       try {
-        //await userAuth(req);
+        await userAuth(req);
 
         return {
           ok: true,
@@ -114,7 +114,7 @@ const userResolver = {
     // one user query
     userInfo: async (parent: any, { userName }, { req, res }) => {
       try {
-        //await userAuth(req);
+        await userAuth(req);
 
         return {
           user: await User.findOne({ userName: userName }).exec(),
@@ -128,9 +128,9 @@ const userResolver = {
       }
     }
   },
-  User: {
+  /* User: {
     messages: (parent: any) => db.messages.filter(message => message.user === parent.id)
-  },
+  }, */
   Mutation: {
     //signup mutation
     signUp: async (_, args: any, context: any) => {
@@ -146,7 +146,9 @@ const userResolver = {
           verifyPassword: args.verifyPassword,
           firstName: args.firstName,
           lastName: args.lastName,
-          role: "user"
+          role: "user",
+          gender: args.gender,
+          country: args.country
         });
 
         const user = newUser.save();
@@ -169,7 +171,7 @@ const userResolver = {
           path: "/"
         });
 
-        return { ok: true, user, token };
+        return { ok: true, user, successMessage: "Registered Successfully" };
       } catch (error) {
         return {
           ok: false,
@@ -212,7 +214,7 @@ const userResolver = {
           path: "/"
         });
 
-        return { ok: true, user, token };
+        return { ok: true, user, successMessage: "Logged in Successfully" };
       } catch (error) {
         return {
           ok: false,
@@ -235,14 +237,15 @@ const userResolver = {
     deleteUser: async (_, args, { req, res }) => {
       try {
         // 1- authenticate user
-        await adminAuth(req);
+        await userAuth(req);
 
         // 2- find user
         const id = args.id;
         await User.findByIdAndDelete(id);
 
         return {
-          ok: true
+          ok: true,
+          successMessage: "Deleted Successfully"
         };
       } catch (error) {
         return {
@@ -252,12 +255,14 @@ const userResolver = {
       }
     },
     // Delete user mutation
-    singleUpload: async (_, { file }, { req, res }) => {
+    uploadProfilePictures: async (_, { file }, { req, res }) => {
       try {
+        // 1- Authenticate user
         await userAuth(req);
 
         let myId = req.user.userId;
 
+        // 2- Get the uploaded pictures url, and update the user's pictures in the DB
         await Promise.all(file.map(processUpload)).then(res => {
           const newPics: any = res;
 
@@ -269,7 +274,8 @@ const userResolver = {
         });
 
         return {
-          ok: true
+          ok: true,
+          successMessage: "Pictures uploaded to your account"
         };
       } catch (error) {
         return {

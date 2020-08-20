@@ -11,8 +11,35 @@ export const ME_QUERY = gql`
         email
         firstName
         lastName
-        createdAt
+        gender
+        country
+        city
         pictures
+        avatarUrl
+        role
+        birthday
+        friends {
+          id
+        }
+        chats {
+          id
+        }
+        messages {
+          id
+        }
+        status
+        speakLanguages
+        learnLanguages
+        education
+        job
+        relationship
+        aboutMe
+        hobbies
+        music
+        books
+        movies
+        tvShows
+        createdAt
       }
     }
   }
@@ -29,8 +56,35 @@ export const ONE_USER_QUERY = gql`
         email
         firstName
         lastName
-        createdAt
+        gender
+        country
+        city
         pictures
+        avatarUrl
+        role
+        birthday
+        friends {
+          id
+        }
+        chats {
+          id
+        }
+        messages {
+          id
+        }
+        status
+        speakLanguages
+        learnLanguages
+        education
+        job
+        relationship
+        aboutMe
+        hobbies
+        music
+        books
+        movies
+        tvShows
+        createdAt
       }
     }
   }
@@ -47,6 +101,34 @@ export const ALL_USERS_QUERY = gql`
         email
         firstName
         lastName
+        gender
+        country
+        city
+        pictures
+        avatarUrl
+        role
+        birthday
+        friends {
+          id
+        }
+        chats {
+          id
+        }
+        messages {
+          id
+        }
+        status
+        speakLanguages
+        learnLanguages
+        education
+        job
+        relationship
+        aboutMe
+        hobbies
+        music
+        books
+        movies
+        tvShows
         createdAt
       }
     }

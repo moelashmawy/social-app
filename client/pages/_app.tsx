@@ -1,21 +1,38 @@
-import { ApolloProvider, useQuery } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { useApollo, initializeApollo } from "../lib/apollo";
 import Layout from "../components/Layout";
 import { ME_QUERY } from "../graphql/queries";
-import { useRouter } from "next/router";
+import "./../styles/index.scss";
+import { useEffect } from "react";
+import { ThemeProvider } from "@material-ui/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import theme from "../styles/theme";
 
 function MyApp(props: any) {
   const { Component, pageProps } = props;
 
   const apolloClient = useApollo(pageProps?.initialApolloState);
 
+  // will send me as a prop to each page in the Component props
   let me = props.meQuery;
+
+  // part of nextjs - material Ui configuration
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement!.removeChild(jssStyles);
+    }
+  }, []);
 
   return (
     <ApolloProvider client={apolloClient}>
-      <Layout me={me.data.me}>
-        <Component {...pageProps} {...me} />
-      </Layout>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Layout me={me.data.me}>
+          <Component {...pageProps} {...me} />
+        </Layout>
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

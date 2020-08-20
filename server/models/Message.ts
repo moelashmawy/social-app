@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 
 const MessageSchema = new Schema(
   {
-    users: { type: [Schema.Types.ObjectId], ref: "User" },
-    body: { type: String, required: true }
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    chat: { type: Schema.Types.ObjectId, ref: "Chat" },
+    text: { type: String, required: true }
   },
   { timestamps: true }
 );

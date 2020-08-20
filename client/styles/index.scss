@@ -1,10 +1,6 @@
-.single-user-link {
-  text-decoration: none;
-  color: green;
-}
+@import "./Home-page/home-page.scss";
 
-.container {
-  max-width: 36rem;
-  padding: 0 1rem;
-  margin: 3rem auto 6rem;
+a {
+  text-decoration: none;
+  color: #000;
 }

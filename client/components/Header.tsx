@@ -5,21 +5,24 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Home } from "@material-ui/icons";
 import { useMutation } from "@apollo/client";
 import { LOGOUT_MUTATION } from "../graphql/mutations";
 import { useRouter } from "next/router";
 
-function Header() {
+function Header(props) {
+  // check whether the user is logged in or not
+  const { me } = props;
+
   const [logout, { data, loading, error }] = useMutation(LOGOUT_MUTATION, {
     onError(error) {
       //console.log(error);
-    },
-    onCompleted() {}
+    }
   });
 
+  // redirect to home page after logout
   if (data?.logout.ok) {
-    useRouter().push("/");
+    useRouter().reload();
   }
 
   return (
@@ -27,26 +30,68 @@ function Header() {
       <AppBar position='static'>
         <Toolbar>
           <IconButton edge='start' color='inherit' aria-label='menu'>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant='h6'>
-            <Link href='/'>
-              <a>Home</a>
+            <Link href='/homePage'>
+              <a>
+                <Home />
+              </a>
             </Link>
-          </Typography>
-          <Button color='inherit'>
+          </IconButton>
+
+          {!me.ok && (
             <Link href='/login'>
               <a>LogIn</a>
             </Link>
-          </Button>
-          <Button color='inherit'>
+          )}
+
+          {!me.ok && (
             <Link href='/signup'>
               <a>SignUp</a>
             </Link>
-          </Button>
-          <Button color='inherit' onClick={() => logout()}>
-            <a>Logout</a>
-          </Button>
+          )}
+
+          {me.ok && <a onClick={() => logout()}>Logout</a>}
+
+          {me.ok && (
+            <Link href='/users/[userName]' as={`/users/${me.user.userName}`}>
+              <a>My Profile</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/messages'>
+              <a>Messages</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/friends'>
+              <a>Friends</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/wall'>
+              <a>Wall</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/photos'>
+              <a>Photos</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/bookmarks'>
+              <a>Bookmarks</a>
+            </Link>
+          )}
+
+          {me.ok && (
+            <Link href='/settings'>
+              <a>Settings</a>
+            </Link>
+          )}
         </Toolbar>
       </AppBar>
     </div>

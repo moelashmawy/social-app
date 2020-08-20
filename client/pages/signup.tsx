@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { TextField } from "formik-material-ui";
-import Layout from "../components/Layout";
+import React from "react";
+import { TextField, Select } from "formik-material-ui";
 import { Formik, Form, Field } from "formik";
-import { Button } from "@material-ui/core";
+import { Button, InputLabel, MenuItem, FormControl } from "@material-ui/core";
 import * as Yup from "yup";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ErrorMessage from "../components/ToastMessage";
 import Router from "next/router";
 import { REGISTER_MUTATION } from "../graphql/mutations";
@@ -29,7 +28,9 @@ const validate = () =>
       .required("This field is required"),
     email: Yup.string()
       .email("Please enter a vaild email")
-      .required("This field is required")
+      .required("This field is required"),
+    gender: Yup.string().required("This field is required"),
+    country: Yup.string().required("This field is required")
   });
 
 export default function signup() {
@@ -51,7 +52,7 @@ export default function signup() {
   };
 
   return (
-    <Layout>
+    <>
       {data?.signUp?.error && <ErrorMessage message={data.signUp.error} case='error' />}
 
       {handleRegisterSuccess()}
@@ -63,10 +64,14 @@ export default function signup() {
           password: "",
           verifyPassword: "",
           firstName: "",
-          lastName: ""
+          lastName: "",
+          gender: "",
+          country: ""
         }}
         validationSchema={validate}
         onSubmit={(values, { setSubmitting }) => {
+          console.log(values);
+
           register({
             variables: {
               userName: values.userName,
@@ -74,7 +79,9 @@ export default function signup() {
               password: values.password,
               verifyPassword: values.verifyPassword,
               firstName: values.firstName,
-              lastName: values.lastName
+              lastName: values.lastName,
+              gender: values.gender,
+              country: values.country
             }
           });
           setSubmitting(false);
@@ -104,11 +111,38 @@ export default function signup() {
           <br />
           <Field component={TextField} name='lastName' label='Last Name' required />
           <br />
+          <FormControl variant='filled'>
+            <InputLabel id='demo-simple-select-autowidth-label'>Gender</InputLabel>
+            <Field
+              labelId='demo-simple-select-autowidth-label'
+              component={Select}
+              name='gender'
+              required>
+              <MenuItem value='male'>Male</MenuItem>
+              <MenuItem value='female'>Female</MenuItem>
+            </Field>
+          </FormControl>
+          <br />
+
+          <br />
+          <FormControl variant='filled'>
+            <InputLabel id='demo-simple-select-filled-label'>Country</InputLabel>
+            <Field
+              component={Select}
+              name='country'
+              labelId='demo-simple-select-filled-label'
+              required>
+              <MenuItem value='Egypt'>Egypt</MenuItem>
+              <MenuItem value='United States'>United States</MenuItem>
+              <MenuItem value='Switzerland'>Switzerland</MenuItem>
+            </Field>
+          </FormControl>
+          <br />
           <Button type='submit' variant='contained' color='secondary'>
             sign Up
           </Button>
         </Form>
       </Formik>
-    </Layout>
+    </>
   );
 }
