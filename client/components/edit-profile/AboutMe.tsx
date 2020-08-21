@@ -1,8 +1,19 @@
 import React, { useState, useReducer } from "react";
-import { TextareaAutosize, Divider, Chip } from "@material-ui/core";
-import { Formik, Form, Field } from "formik";
+import { Divider, Chip } from "@material-ui/core";
+import { Formik, Form, Field, ErrorMessage as FormikError } from "formik";
 import { Grid, Button } from "@material-ui/core";
+import * as Yup from "yup";
 import { TextField } from "formik-material-ui";
+import { useMutation } from "@apollo/client";
+import { UPDATE_PROGILE_MUTATION } from "../../graphql/mutations";
+import ErrorMessage from "../ToastMessage";
+import Router from "next/router";
+
+// form validation using Yup
+const validate = () =>
+  Yup.object({
+    aboutMe: Yup.string().notRequired().min(2, "Must be more than one character")
+  });
 
 const AboutMe = ({ me }) => {
   // get the languaes state
@@ -12,6 +23,7 @@ const AboutMe = ({ me }) => {
   const [movies, setMovies] = useState(me.movies);
   const [tvShows, setTvShows] = useState(me.tvShows);
 
+  // handle change the fields
   const [allValues, setAllValues] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -23,6 +35,7 @@ const AboutMe = ({ me }) => {
     }
   );
 
+  // handle each item change to be saved in its array
   const changeHandler = e => {
     setAllValues({ ...allValues, [e.target.name]: e.target.value });
   };
@@ -31,22 +44,27 @@ const AboutMe = ({ me }) => {
   const addNewItem = category => {
     switch (category) {
       case "hobbies":
+        if (!allValues.hobby) return;
         setHobbies(oldArray => [...oldArray, allValues.hobby]);
         setAllValues({ hobby: "" });
         break;
       case "music":
+        if (!allValues.music) return;
         setMusic(oldArray => [...oldArray, allValues.music]);
         setAllValues({ music: "" });
         break;
       case "books":
+        if (!allValues.book) return;
         setBooks(oldArray => [...oldArray, allValues.book]);
         setAllValues({ book: "" });
         break;
       case "movies":
+        if (!allValues.movie) return;
         setMovies(oldArray => [...oldArray, allValues.movie]);
         setAllValues({ movie: "" });
         break;
       case "tvShows":
+        if (!allValues.tvShow) return;
         setTvShows(oldArray => [...oldArray, allValues.tvShow]);
         setAllValues({ tvShow: "" });
         break;
@@ -84,225 +102,247 @@ const AboutMe = ({ me }) => {
     }
   };
 
+  // handle the update profile mutation
+  const [updateProfile, { data, loading }] = useMutation(UPDATE_PROGILE_MUTATION);
+
+  // show error or success message
+  const handleSuccessError = () => {
+    if (data?.updateProfileInfo.ok) {
+      Router.push(`/users/${me.userName}`);
+      return (
+        <ErrorMessage message={data?.updateProfileInfo.successMessage} case='success' />
+      );
+    }
+    if (data?.updateProfileInfo.error) {
+      return <ErrorMessage message={data?.updateProfileInfo.error} case='error' />;
+    }
+  };
+
   return (
-    <Formik
-      initialValues={{
-        aboutMe: me.aboutMe,
-        hobby: allValues.hobby,
-        music: allValues.music,
-        book: allValues.book,
-        movie: allValues.movie,
-        tvShow: allValues.tvShow
-      }}
-      //validationSchema={validate}
-      onSubmit={(values, { setSubmitting }) => {
-        /* login({
-                  variables: {
-                    userName: values.userName,
-                    password: values.password
-                  }
-                }); */
-        setSubmitting(false);
-      }}>
-      <Form>
-        {/* about me */}
-        <Grid container>
-          <Grid item sm={2}>
-            About me
-          </Grid>
-          <Grid item sm={10}>
-            <TextareaAutosize rowsMin={4} placeholder='About me' name='aboutMe' />
-          </Grid>
-        </Grid>
-
-        <Divider variant='middle' />
-
-        {/***************** hobbies ***************/}
-        <Grid container>
-          <Grid item sm={2}>
-            Interests, Hobbies, etc.
-          </Grid>
-          <Grid item sm={6}>
-            <Field
-              value={allValues.hobby}
-              onChange={e => changeHandler(e)}
-              component={TextField}
-              name='hobby'
-              label='Interests, Hobbies, etc.'
-            />
-          </Grid>
-          <Grid item sm={2}>
-            <Button onClick={() => addNewItem("hobbies")} variant='outlined'>
-              Add
-            </Button>
-          </Grid>
-
-          {/*  hobbies List */}
+    <>
+      {handleSuccessError()}
+      <Formik
+        initialValues={{
+          aboutMe: "me.aboutMe",
+          hobby: allValues.hobby,
+          music: allValues.music,
+          book: allValues.book,
+          movie: allValues.movie,
+          tvShow: allValues.tvShow
+        }}
+        validationSchema={validate}
+        onSubmit={(values, { setSubmitting }) => {
+          updateProfile({
+            variables: {
+              aboutMe: values.aboutMe,
+              hobbies: hobbies,
+              music: music,
+              books: books,
+              movies: movies,
+              tvShows: tvShows
+            }
+          });
+          setSubmitting(false);
+        }}>
+        <Form>
+          {/***************** about me *********************/}
           <Grid container>
-            {hobbies.length > 0 &&
-              hobbies.map(hobby => (
-                <Chip
-                  label={hobby}
-                  onDelete={() => handleDelete("hobbies", hobby)}
-                  color='primary'
-                  variant='outlined'
-                />
-              ))}
-          </Grid>
-        </Grid>
-
-        <Divider />
-
-        {/***************** Favorite Music ***************/}
-        <Grid container>
-          <Grid item sm={2}>
-            Favorite Music
-          </Grid>
-          <Grid item sm={6}>
-            <Field
-              value={allValues.music}
-              onChange={e => changeHandler(e)}
-              component={TextField}
-              name='music'
-              label='Favorite Music'
-            />
-          </Grid>
-          <Grid item sm={2}>
-            <Button onClick={() => addNewItem("music")} variant='outlined'>
-              Add
-            </Button>
+            <Grid item sm={2}>
+              About me
+            </Grid>
+            <Grid item sm={10}>
+              <Field as='textarea' name='aboutMe' label='aboutMe' />
+              <FormikError name='aboutMe' />
+            </Grid>
           </Grid>
 
-          {/*  music List */}
+          <Divider variant='middle' />
+
+          {/***************** hobbies ***************/}
           <Grid container>
-            {music.length > 0 &&
-              music.map(item => (
-                <Chip
-                  label={item}
-                  onDelete={() => handleDelete("music", item)}
-                  color='primary'
-                  variant='outlined'
-                />
-              ))}
-          </Grid>
-        </Grid>
+            <Grid item sm={2}>
+              Interests, Hobbies, etc.
+            </Grid>
+            <Grid item sm={6}>
+              <Field
+                value={allValues.hobby}
+                onChange={e => changeHandler(e)}
+                component={TextField}
+                name='hobby'
+                label='Interests, Hobbies, etc.'
+              />
+            </Grid>
+            <Grid item sm={2}>
+              <Button onClick={() => addNewItem("hobbies")} variant='outlined'>
+                Add
+              </Button>
+            </Grid>
 
-        <Divider />
-
-        {/***************** Favorite books ***************/}
-        <Grid container>
-          <Grid item sm={2}>
-            Favorite Books
-          </Grid>
-          <Grid item sm={6}>
-            <Field
-              value={allValues.book}
-              onChange={e => changeHandler(e)}
-              component={TextField}
-              name='book'
-              label='Favorite Books'
-            />
-          </Grid>
-          <Grid item sm={2}>
-            <Button onClick={() => addNewItem("books")} variant='outlined'>
-              Add
-            </Button>
+            {/***  hobbies List***/}
+            <Grid container>
+              {hobbies.length > 0 &&
+                hobbies.map(hobby => (
+                  <Chip
+                    label={hobby}
+                    onDelete={() => handleDelete("hobbies", hobby)}
+                    color='primary'
+                    variant='outlined'
+                  />
+                ))}
+            </Grid>
           </Grid>
 
-          {/*  book List */}
+          <Divider />
+
+          {/***************** Favorite Music ***************/}
           <Grid container>
-            {books.length > 0 &&
-              books.map(item => (
-                <Chip
-                  label={item}
-                  onDelete={() => handleDelete("books", item)}
-                  color='primary'
-                  variant='outlined'
-                />
-              ))}
-          </Grid>
-        </Grid>
+            <Grid item sm={2}>
+              Favorite Music
+            </Grid>
+            <Grid item sm={6}>
+              <Field
+                value={allValues.music}
+                onChange={e => changeHandler(e)}
+                component={TextField}
+                name='music'
+                label='Favorite Music'
+              />
+            </Grid>
+            <Grid item sm={2}>
+              <Button onClick={() => addNewItem("music")} variant='outlined'>
+                Add
+              </Button>
+            </Grid>
 
-        <Divider />
-
-        {/***************** Favorite movies ***************/}
-        <Grid container>
-          <Grid item sm={2}>
-            Favorite movies
-          </Grid>
-          <Grid item sm={6}>
-            <Field
-              value={allValues.movie}
-              onChange={e => changeHandler(e)}
-              component={TextField}
-              name='movie'
-              label='Favorite movies'
-            />
-          </Grid>
-          <Grid item sm={2}>
-            <Button onClick={() => addNewItem("movies")} variant='outlined'>
-              Add
-            </Button>
+            {/***  music List ***/}
+            <Grid container>
+              {music.length > 0 &&
+                music.map(item => (
+                  <Chip
+                    label={item}
+                    onDelete={() => handleDelete("music", item)}
+                    color='primary'
+                    variant='outlined'
+                  />
+                ))}
+            </Grid>
           </Grid>
 
-          {/*  movie List */}
+          <Divider />
+
+          {/***************** Favorite books ***************/}
           <Grid container>
-            {movies.length > 0 &&
-              movies.map(item => (
-                <Chip
-                  label={item}
-                  onDelete={() => handleDelete("movies", item)}
-                  color='primary'
-                  variant='outlined'
-                />
-              ))}
-          </Grid>
-        </Grid>
+            <Grid item sm={2}>
+              Favorite Books
+            </Grid>
+            <Grid item sm={6}>
+              <Field
+                value={allValues.book}
+                onChange={e => changeHandler(e)}
+                component={TextField}
+                name='book'
+                label='Favorite Books'
+              />
+            </Grid>
+            <Grid item sm={2}>
+              <Button onClick={() => addNewItem("books")} variant='outlined'>
+                Add
+              </Button>
+            </Grid>
 
-        <Divider />
-
-        {/***************** Favorite TV shows ***************/}
-        <Grid container>
-          <Grid item sm={2}>
-            Favorite TV shows
-          </Grid>
-          <Grid item sm={6}>
-            <Field
-              value={allValues.tvShow}
-              onChange={e => changeHandler(e)}
-              component={TextField}
-              name='tvShow'
-              label='Favorite TV shows'
-            />
-          </Grid>
-          <Grid item sm={2}>
-            <Button onClick={() => addNewItem("tvShows")} variant='outlined'>
-              Add
-            </Button>
+            {/***  book List ***/}
+            <Grid container>
+              {books.length > 0 &&
+                books.map(item => (
+                  <Chip
+                    label={item}
+                    onDelete={() => handleDelete("books", item)}
+                    color='primary'
+                    variant='outlined'
+                  />
+                ))}
+            </Grid>
           </Grid>
 
-          {/*  tvShow List */}
+          <Divider />
+
+          {/***************** Favorite movies ***************/}
           <Grid container>
-            {tvShows.length > 0 &&
-              tvShows.map(item => (
-                <Chip
-                  label={item}
-                  onDelete={() => handleDelete("tvShows", item)}
-                  color='primary'
-                  variant='outlined'
-                />
-              ))}
+            <Grid item sm={2}>
+              Favorite movies
+            </Grid>
+            <Grid item sm={6}>
+              <Field
+                value={allValues.movie}
+                onChange={e => changeHandler(e)}
+                component={TextField}
+                name='movie'
+                label='Favorite movies'
+              />
+            </Grid>
+            <Grid item sm={2}>
+              <Button onClick={() => addNewItem("movies")} variant='outlined'>
+                Add
+              </Button>
+            </Grid>
+
+            {/***  movie List ***/}
+            <Grid container>
+              {movies.length > 0 &&
+                movies.map(item => (
+                  <Chip
+                    label={item}
+                    onDelete={() => handleDelete("movies", item)}
+                    color='primary'
+                    variant='outlined'
+                  />
+                ))}
+            </Grid>
           </Grid>
-        </Grid>
 
-        <Divider />
+          <Divider />
 
-        {/* Submit buttom */}
-        <Button type='submit' variant='contained' color='secondary'>
-          Update
-        </Button>
-      </Form>
-    </Formik>
+          {/***************** Favorite TV shows ***************/}
+          <Grid container>
+            <Grid item sm={2}>
+              Favorite TV shows
+            </Grid>
+            <Grid item sm={6}>
+              <Field
+                value={allValues.tvShow}
+                onChange={e => changeHandler(e)}
+                component={TextField}
+                name='tvShow'
+                label='Favorite TV shows'
+              />
+            </Grid>
+            <Grid item sm={2}>
+              <Button onClick={() => addNewItem("tvShows")} variant='outlined'>
+                Add
+              </Button>
+            </Grid>
+
+            {/***  tvShow List ***/}
+            <Grid container>
+              {tvShows.length > 0 &&
+                tvShows.map(item => (
+                  <Chip
+                    label={item}
+                    onDelete={() => handleDelete("tvShows", item)}
+                    color='primary'
+                    variant='outlined'
+                  />
+                ))}
+            </Grid>
+          </Grid>
+
+          {/********** Submit buttom **********/}
+          <Button type='submit' variant='outlined'>
+            Save
+          </Button>
+        </Form>
+      </Formik>
+    </>
   );
 };
 

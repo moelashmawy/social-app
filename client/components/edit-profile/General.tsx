@@ -12,56 +12,71 @@ import {
 import * as Yup from "yup";
 import { useMutation } from "@apollo/client";
 import ErrorMessage from "../../components/ToastMessage";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
+import { UPDATE_PROGILE_MUTATION } from "../../graphql/mutations";
 
-// form validation useing Yup
+// form validation using Yup
 const validate = () =>
   Yup.object({
-    userName: Yup.string()
-      .min(2, "Must be more than one character")
-      .required("Username is required"),
-    password: Yup.string()
-      .min(8, "Must be more than 8 characters")
-      .required("This field is required")
+    firstName: Yup.string().min(2, "Must be more than one character"),
+    lastName: Yup.string().min(2, "Must be more than one character"),
+    birthday: Yup.string().min(2, "Must be more than one character"),
+    gender: Yup.string().min(2, "Must be more than one character"),
+    country: Yup.string().min(2, "Must be more than one character"),
+    city: Yup.string().min(2, "Must be more than one character"),
+    education: Yup.string().min(2, "Must be more than one character"),
+    job: Yup.string().min(2, "Must be more than one character"),
+    relationship: Yup.string().min(2, "Must be more than one character")
   });
 
 export default function General({ me }) {
-  //const [login, { data, loading }] = useMutation(LOGIN_MUTATION);
+  // handle the update profile mutation
+  const [updateProfile, { data, loading }] = useMutation(UPDATE_PROGILE_MUTATION);
 
-  /* const handleRegisterSuccess = () => {
-    if (data?.login?.ok) {
-      useRouter().replace("/homePage");
-
-      return <ErrorMessage message='Logged in successfully' case='success' />;
+  // show error or success message
+  const handleSuccessError = () => {
+    if (data?.updateProfileInfo.ok) {
+      useRouter().push(`/users/${me.userName}`);
+      return (
+        <ErrorMessage message={data?.updateProfileInfo.successMessage} case='success' />
+      );
     }
-  }; */
+    if (data?.updateProfileInfo.error) {
+      return <ErrorMessage message={data?.updateProfileInfo.error} case='error' />;
+    }
+  };
 
   return (
     <>
-      {/* {loading && <div>logging in.....</div>}
-      {data?.login?.error && <ErrorMessage message={data.login.error} case='error' />}
-
-      {handleRegisterSuccess()} */}
+      {handleSuccessError()}
 
       <Formik
         initialValues={{
-          firstName: me.firstName,
-          lastName: me.lastName,
-          birthday: me.birthday,
-          gender: me.gender,
-          country: me.country,
-          education: me.education,
-          job: me.job,
-          relationship: me.relationship
+          firstName: me.firstName ? me.firstName : "",
+          lastName: me.lastName ? me.lastName : "",
+          birthday: me.birthday ? me.birthday : "",
+          gender: me.gender ? me.gender : "",
+          country: me.country ? me.country : "",
+          city: me.city ? me.city : "",
+          education: me.education ? me.education : "",
+          job: me.job ? me.job : "",
+          relationship: me.relationship ? me.relationship : ""
         }}
         validationSchema={validate}
         onSubmit={(values, { setSubmitting }) => {
-          /* login({
+          updateProfile({
             variables: {
-              userName: values.userName,
-              password: values.password
+              firstName: values.firstName,
+              lastName: values.lastName,
+              birthday: values.birthday,
+              gender: values.gender,
+              country: values.country,
+              city: values.city,
+              education: values.education,
+              job: values.job,
+              relationship: values.relationship
             }
-          }); */
+          });
           setSubmitting(false);
         }}>
         <Form>
@@ -71,7 +86,7 @@ export default function General({ me }) {
               First Name
             </Grid>
             <Grid item sm={10}>
-              <Field component={TextField} name='firstName' label='First Name' required />
+              <Field component={TextField} name='firstName' label='First Name' />
             </Grid>
           </Grid>
 
@@ -83,7 +98,7 @@ export default function General({ me }) {
               Last Name
             </Grid>
             <Grid item sm={10}>
-              <Field component={TextField} name='lastName' label='Last Name' required />
+              <Field component={TextField} name='lastName' label='Last Name' />
             </Grid>
           </Grid>
 
@@ -95,7 +110,7 @@ export default function General({ me }) {
               Birthday
             </Grid>
             <Grid item sm={10}>
-              <Field type='date' name='birthday' label='Birthday' required />
+              <Field type='date' name='birthday' label='Birthday' />
             </Grid>
           </Grid>
 
@@ -109,7 +124,7 @@ export default function General({ me }) {
             <Grid item sm={10}>
               <FormControl>
                 <InputLabel>Select</InputLabel>
-                <Field component={Select} name='gender' required>
+                <Field component={Select} name='gender'>
                   <MenuItem value='male'>Male</MenuItem>
                   <MenuItem value='female'>Female</MenuItem>
                 </Field>
@@ -125,10 +140,24 @@ export default function General({ me }) {
               Country
             </Grid>
             <Grid item sm={10}>
-              <Field component={Select} name='country' required>
+              <Field component={Select} name='country'>
                 <MenuItem value='egypt'>Egypt</MenuItem>
                 <MenuItem value='United States'>USA</MenuItem>
                 <MenuItem value='germany'>Germany</MenuItem>
+              </Field>
+            </Grid>
+          </Grid>
+
+          {/* City */}
+          <Grid container>
+            <Grid item sm={2}>
+              City
+            </Grid>
+            <Grid item sm={10}>
+              <Field component={Select} name='city'>
+                <MenuItem value='come City'>come City</MenuItem>
+                <MenuItem value='come City1'>come City1</MenuItem>
+                <MenuItem value='come City2'>come City2</MenuItem>
               </Field>
             </Grid>
           </Grid>
@@ -144,8 +173,7 @@ export default function General({ me }) {
               <Field
                 labelId='demo-simple-select-autowidth-label'
                 component={Select}
-                name='education'
-                required>
+                name='education'>
                 <MenuItem value='not-specified'>Not Specified</MenuItem>
                 <MenuItem value='high-school'>High School</MenuItem>
                 <MenuItem value='some-college'>Some College</MenuItem>
@@ -163,12 +191,7 @@ export default function General({ me }) {
               Occupation or Job
             </Grid>
             <Grid item sm={10}>
-              <Field
-                component={TextField}
-                name='job'
-                label=' Occupation or Job'
-                required
-              />
+              <Field component={TextField} name='job' label=' Occupation or Job' />
             </Grid>
           </Grid>
 
@@ -194,7 +217,7 @@ export default function General({ me }) {
 
           {/* Submit buttom */}
           <Button type='submit' variant='contained' color='secondary'>
-            Update
+            Save
           </Button>
         </Form>
       </Formik>

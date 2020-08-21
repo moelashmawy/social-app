@@ -1,6 +1,9 @@
 import db from "./../dummy";
 import User from "./../../models/User";
-import { signupvalidatation } from "./../../middlewares/validation/userValidation";
+import {
+  signupvalidatation,
+  updateProfileValidation
+} from "./../../middlewares/validation/userValidation";
 import { loginValidatation } from "./../../middlewares/validation/userValidation";
 import * as jwt from "jsonwebtoken";
 import { userAuth, adminAuth } from "../../middlewares/auth";
@@ -95,6 +98,7 @@ const userResolver = {
         };
       }
     },
+
     // all users query
     users: async (parent: any, { id }, { req, res }) => {
       try {
@@ -111,10 +115,11 @@ const userResolver = {
         };
       }
     },
+
     // one user query
     userInfo: async (parent: any, { userName }, { req, res }) => {
       try {
-        await userAuth(req);
+        //await userAuth(req);
 
         return {
           user: await User.findOne({ userName: userName }).exec(),
@@ -128,9 +133,16 @@ const userResolver = {
       }
     }
   },
+
   /* User: {
-    messages: (parent: any) => db.messages.filter(message => message.user === parent.id)
+    contactInfo: async (parent: any) => {
+      let me = await User.findById(parent.id).exec();
+      console.log(me);
+
+      return me.contactInfo;
+    }
   }, */
+
   Mutation: {
     //signup mutation
     signUp: async (_, args: any, context: any) => {
@@ -179,7 +191,9 @@ const userResolver = {
         };
       }
     },
-    // login mutation
+    //******************************************
+    //*********** login mutation ***************
+    //******************************************
     login: async (_parent: any, args: any, context: any) => {
       try {
         //1- validate input data
@@ -276,6 +290,35 @@ const userResolver = {
         return {
           ok: true,
           successMessage: "Pictures uploaded to your account"
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          error: error.message
+        };
+      }
+    },
+    // update User info
+    updateProfileInfo: async (_, args, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        // 2- validate inputs
+        await updateProfileValidation.validate(args);
+
+        let myId = req.user.userId;
+
+        // 3- find the user and update the given fields
+        User.findByIdAndUpdate(
+          { _id: myId },
+          { $set: args },
+          { useFindAndModify: false, upsert: true }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Profile updated Successfully"
         };
       } catch (error) {
         return {

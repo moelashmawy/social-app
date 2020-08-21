@@ -53,7 +53,7 @@ const editProfile = props => {
               <General me={user} />
             </TabPanel>
             <TabPanel value='Contact Info'>
-              <Contact />
+              <Contact me={user} />
             </TabPanel>
             <TabPanel value='About Me'>
               <AboutMe me={user} />

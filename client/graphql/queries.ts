@@ -27,6 +27,13 @@ export const ME_QUERY = gql`
         messages {
           id
         }
+        contactInfo {
+          skype
+          instagram
+          snapchat
+          facebook
+          website
+        }
         status
         speakLanguages
         learnLanguages
@@ -72,6 +79,13 @@ export const ONE_USER_QUERY = gql`
         messages {
           id
         }
+        contactInfo {
+          skype
+          instagram
+          snapchat
+          facebook
+          website
+        }
         status
         speakLanguages
         learnLanguages
@@ -116,6 +130,13 @@ export const ALL_USERS_QUERY = gql`
         }
         messages {
           id
+        }
+        contactInfo {
+          skype
+          instagram
+          snapchat
+          facebook
+          website
         }
         status
         speakLanguages

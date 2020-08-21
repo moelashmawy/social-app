@@ -2,6 +2,22 @@
 const userTypeDef = `
   scalar Upload
 
+  type ContactPlatform {
+    skype: String
+    instagram: String
+    snapchat: String
+    facebook: String
+    website: String
+  }
+
+  input ContactPlatformInput {
+    skype: String
+    instagram: String
+    snapchat: String
+    facebook: String
+    website: String
+  }
+
   type User {
     id: ID
     userName: String!
@@ -25,6 +41,7 @@ const userTypeDef = `
     education: String
     job: String
     relationship: String
+    contactInfo: ContactPlatform
     aboutMe: String
     hobbies: [String!]
     music: [String!]
@@ -32,6 +49,18 @@ const userTypeDef = `
     movies: [String!]
     tvShows: [String!]
     createdAt: String!
+  }
+
+  type OneUserQuery{
+    ok: Boolean!
+    user: User
+    error: String
+  }
+
+  type AllUsersQuery{
+    ok: Boolean!
+    users: [User!]
+    error: String
   }
 
   type UserPayload{
@@ -51,20 +80,14 @@ const userTypeDef = `
     error: String
   }
 
-  type OneUserQuery{
-    ok: Boolean!
-    user: User
-    error: String
-  }
-
-  type AllUsersQuery{
-    ok: Boolean!
-    users: [User!]
-    error: String
-  }
-
   type UploadProfilePicturesPayload{
     ok: Boolean!
+    successMessage: String
+  }
+
+  type UpdateProfilePayload{
+    ok: Boolean!
+    error: String
     successMessage: String
   }
 
@@ -93,6 +116,28 @@ const userTypeDef = `
     deleteUser(id:ID!): DeleteUserPayload
 
     uploadProfilePictures(file: [Upload!]): UploadProfilePicturesPayload!
+
+    updateProfileInfo(
+      firstName: String,
+      lastName: String,
+      gender: String,
+      country: String,
+      city: String,
+      birthday: String,
+      speakLanguages: [String!],
+      learnLanguages: [String!],
+      education: String,
+      job: String,
+      relationship: String,
+      contactInfo: ContactPlatformInput,
+      aboutMe: String,
+      hobbies: [String!],
+      music: [String!],
+      books: [String!],
+      movies: [String!],
+      tvShows: [String!],
+    ): UpdateProfilePayload!
+    
   }
 `;
 

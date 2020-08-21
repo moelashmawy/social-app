@@ -26,6 +26,7 @@ export interface IUser extends mongoose.Document {
   education: string;
   job: string;
   relationship: string;
+  contactInfo: Array<any>;
   aboutMe: string;
   hobbies: Array<string>;
   music: Array<string>;
@@ -58,6 +59,13 @@ const UserSchema = new Schema(
     education: { type: String },
     job: { type: String },
     relationship: { type: String },
+    contactInfo: {
+      skype: String,
+      facebook: String,
+      snapchat: String,
+      instagram: String,
+      website: String
+    },
     aboutMe: { type: String },
     hobbies: { type: Array, default: [] },
     music: { type: Array, default: [] },

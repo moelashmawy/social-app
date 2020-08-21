@@ -70,3 +70,84 @@ export const loginValidatation = Yup.object().shape({
       })
     )
 });
+
+// validate update user info using Yup
+export const updateProfileValidation = Yup.object().shape({
+  firstName: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  lastName: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  gender: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  city: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  birthday: Yup.date().required(),
+  education: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  job: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  relationship: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  aboutMe: Yup.string()
+    .notRequired()
+    .trim()
+    .min(2, "First name must be more than one character"),
+  speakLanguages:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  learnLanguages:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  hobbies:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  music:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  books:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  movies:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array(),
+  tvShows:
+    Yup.array()
+      .of(Yup.string())
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array()
+  /* contactInfo:
+    Yup.array()
+      .of(
+        Yup.object().shape({
+          skype: String
+        })
+      )
+      .compact(value => value != typeof String)
+      .ensure() || Yup.array() */
+});
