@@ -123,7 +123,7 @@ const AboutMe = ({ me }) => {
       {handleSuccessError()}
       <Formik
         initialValues={{
-          aboutMe: "me.aboutMe",
+          aboutMe: me.aboutMe,
           hobby: allValues.hobby,
           music: allValues.music,
           book: allValues.book,
