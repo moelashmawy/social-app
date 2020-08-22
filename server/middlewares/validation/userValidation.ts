@@ -89,7 +89,7 @@ export const updateProfileValidation = Yup.object().shape({
     .notRequired()
     .trim()
     .min(2, "First name must be more than one character"),
-  birthday: Yup.date().required(),
+  birthday: Yup.date().notRequired(),
   education: Yup.string()
     .notRequired()
     .trim()
