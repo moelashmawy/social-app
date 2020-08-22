@@ -80,32 +80,26 @@ export const updateProfileValidation = Yup.object().shape({
   lastName: Yup.string()
     .notRequired()
     .trim()
-    .min(2, "First name must be more than one character"),
+    .min(2, "Last name must be more than one character"),
   gender: Yup.string()
     .notRequired()
     .trim()
-    .min(2, "First name must be more than one character"),
-  city: Yup.string()
-    .notRequired()
-    .trim()
-    .min(2, "First name must be more than one character"),
+    .min(2, "Gender must be more than one character"),
+  city: Yup.string().notRequired().trim().min(2, "City must be more than one character"),
   birthday: Yup.date().notRequired(),
   education: Yup.string()
     .notRequired()
     .trim()
-    .min(2, "First name must be more than one character"),
-  job: Yup.string()
-    .notRequired()
-    .trim()
-    .min(2, "First name must be more than one character"),
+    .min(2, "Education must be more than one character"),
+  job: Yup.string().notRequired().trim().min(2, "Job must be more than one character"),
   relationship: Yup.string()
     .notRequired()
     .trim()
-    .min(2, "First name must be more than one character"),
+    .min(2, "Relationship must be more than one character"),
   aboutMe: Yup.string()
     .notRequired()
     .trim()
-    .min(2, "First name must be more than one character"),
+    .min(2, "About me must be more than one character"),
   speakLanguages:
     Yup.array()
       .of(Yup.string())
