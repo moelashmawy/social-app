@@ -3,6 +3,7 @@ import { useApollo, initializeApollo } from "../lib/apollo";
 import Layout from "../components/Layout";
 import { ME_QUERY } from "../graphql/queries";
 import "./../styles/index.scss";
+import "font-awesome/css/font-awesome.min.css";
 import { useEffect } from "react";
 import { ThemeProvider } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";

@@ -4,10 +4,23 @@ import { useQuery } from "@apollo/client";
 import Layout from "../../components/Layout";
 import ErrorMessage from "../../components/ToastMessage";
 import { ONE_USER_QUERY, ME_QUERY } from "../../graphql/queries";
-import { useRouter } from "next/router";
 import Head from "next/head";
-import MyProfile from "./MyProfile";
+import {
+  Grid,
+  Avatar,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon
+} from "@material-ui/core";
+import Link from "next/link";
 
+/**
+ * This page will render the user's profile
+ * here we will render depeds on the data coming from props
+ * if the data belongs to the logged in user will render my profile
+ */
 function User(props) {
   // extract the logged in user
   let { me, loading } = props.data;
@@ -19,31 +32,204 @@ function User(props) {
     user: { user }
   } = props;
 
-  // here we decide whether to render a regular profile
-  // or if the username in the url is my username, render my profile
-  if (myProfile?.userName == user?.userName) {
-    return <MyProfile me={myProfile} />;
-  }
-
   return (
     <>
       {userQuery.error && <div>{userQuery.error}</div>}
+      {error && <div>{error}</div>}
 
       {user && (
         <>
           <Head>
-            <title>{user.userName} Profile</title>
+            {myProfile?.userName == user?.userName ? (
+              <title>My Profile</title>
+            ) : (
+              <title>{user.userName}'s Profile</title>
+            )}
             <link rel='icon' href='/favicon.ico' />
           </Head>
-          <div>
-            <div>{user.id}</div>
-            <div>{user.userName}</div>
-            <div>{user.email}</div>
-            <div>{user.firstName}</div>
-            <div>{user.lastName}</div>
-            <div>{user.createdAt}</div>
-            <div>{user.createdAt}</div>
-          </div>
+
+          <Grid container>
+            <Grid item xs={8}>
+              {/*********** Welcome message ***************/}
+              {myProfile?.userName == user?.userName && (
+                <Grid
+                  container
+                  direction='row'
+                  justify='space-between'
+                  alignItems='center'>
+                  <Grid>Hi {user.userName}, Have a good day.</Grid>
+                  <Grid>
+                    <Link href='/profile/editProfile'>
+                      <a>Edit Profile</a>
+                    </Link>
+                  </Grid>
+                  <Grid>Add Photos</Grid>
+                </Grid>
+              )}
+
+              {/************************ Profile details ********************/}
+              <Grid container>
+                {/* Profile images */}
+                <Grid item xs={4}>
+                  {user.pictures.length < 1 ? (
+                    <Avatar alt='profile image' src={user.avatarUrl} />
+                  ) : (
+                    user.pictures.map((pic, index) => (
+                      <Avatar key={index} variant='rounded' src={pic} />
+                    ))
+                  )}
+                </Grid>
+
+                {/* profile details */}
+                <Grid xs={8}>
+                  <div>country: {user.country}</div>
+                  <div>status: {user.status}</div>
+                  {user.speakLanguages.length > 0 && (
+                    <div>
+                      Speaks:{" "}
+                      {user.speakLanguages.map(lang => (
+                        <span>{lang} | </span>
+                      ))}
+                    </div>
+                  )}
+                  {user.learnLanguages.length > 0 && (
+                    <div>
+                      Speaks:{" "}
+                      {user.learnLanguages.map(lang => (
+                        <span>{lang} | </span>
+                      ))}
+                    </div>
+                  )}
+                  <div>Education: {user.education}</div>
+                  <div>Relationship status: {user.relationship}</div>
+                </Grid>
+              </Grid>
+
+              {/*  Message - Bookmark - Add Friend - Comments - Block - Report */}
+              {myProfile?.userName != user?.userName && (
+                <div>
+                  <span>Message</span>
+                  <span>Bookmark</span>
+                  <span>Add Friend</span>
+                  <span>Comments</span>
+                </div>
+              )}
+
+              {/************************ About me ********************/}
+              {user.aboutMe && (
+                <Grid>
+                  <h3>About me</h3>
+                  <p>{user.aboutMe}</p>
+                </Grid>
+              )}
+
+              {user.hobbies.length > 0 && (
+                <Grid>
+                  <h3>Hobbies & Interests </h3>
+                  {user.hobbies.map(hobby => (
+                    <Chip label={hobby} color='primary' variant='outlined' />
+                  ))}
+                </Grid>
+              )}
+
+              {/************************ music ********************/}
+              {user.music.length > 0 && (
+                <Grid>
+                  <h3>Favorite Music</h3>
+                  {user.music.map(music => (
+                    <Chip label={music} color='primary' variant='outlined' />
+                  ))}
+                </Grid>
+              )}
+
+              {/************************ movies ********************/}
+              {user.movies.length > 0 && (
+                <Grid>
+                  <h3>Favorite Movies</h3>
+                  {user.movies.map(movie => (
+                    <Chip label={movie} color='primary' variant='outlined' />
+                  ))}
+                </Grid>
+              )}
+
+              {/************************ tv shows ********************/}
+              {user.tvShows.length > 0 && (
+                <Grid>
+                  <h3>Favorite TV Shows</h3>
+                  {user.tvShows.map(tvShow => (
+                    <Chip label={tvShow} color='primary' variant='outlined' />
+                  ))}
+                </Grid>
+              )}
+
+              {/************************ Books ********************/}
+              {user.books.length > 0 && (
+                <Grid>
+                  <h3>Favorite Books</h3>
+                  {user.books.map(book => (
+                    <Chip label={book} color='primary' variant='outlined' />
+                  ))}
+                </Grid>
+              )}
+
+              {/************************ contact me ********************/}
+              {user.contactInfo && (
+                <Grid>
+                  <h3>Contact me</h3>
+                  <List>
+                    {user.contactInfo.skype && (
+                      <ListItem>
+                        <ListItemIcon>
+                          <i className='fa fa-skype' aria-hidden='true'></i>
+                        </ListItemIcon>
+                        <ListItemText secondary={user.contactInfo.skype} />
+                      </ListItem>
+                    )}
+
+                    {user.contactInfo.facebook && (
+                      <ListItem>
+                        <ListItemIcon>
+                          <i className='fa fa-facebook' aria-hidden='true'></i>
+                        </ListItemIcon>
+                        <ListItemText secondary={user.contactInfo.facebook} />
+                      </ListItem>
+                    )}
+
+                    {user.contactInfo.instagram && (
+                      <ListItem>
+                        <ListItemIcon>
+                          <i className='fa fa-instagram' aria-hidden='true'></i>
+                        </ListItemIcon>
+                        <ListItemText secondary={user.contactInfo.instagram} />
+                      </ListItem>
+                    )}
+
+                    {user.contactInfo.snapchat && (
+                      <ListItem>
+                        <ListItemIcon>
+                          <i className='fa fa-snapchat' aria-hidden='true'></i>
+                        </ListItemIcon>
+                        <ListItemText secondary={user.contactInfo.snapchat} />
+                      </ListItem>
+                    )}
+
+                    {user.contactInfo.website && (
+                      <ListItem>
+                        <ListItemIcon>
+                          <i className='fa fa-globe' aria-hidden='true'></i>
+                        </ListItemIcon>
+                        <ListItemText secondary={user.contactInfo.website} />
+                      </ListItem>
+                    )}
+                  </List>
+                </Grid>
+              )}
+            </Grid>
+
+            <Grid item xs={4}>
+              Right Side
+            </Grid>
+          </Grid>
         </>
       )}
     </>
