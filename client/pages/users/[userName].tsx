@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { initializeApollo } from "../../lib/apollo";
 import { useQuery } from "@apollo/client";
 import Layout from "../../components/Layout";
@@ -15,6 +15,7 @@ import {
   ListItemIcon
 } from "@material-ui/core";
 import Link from "next/link";
+import PhotosSlider from "../../components/user-profile/PhotosSlider";
 
 /**
  * This page will render the user's profile
@@ -31,6 +32,11 @@ function User(props) {
     user: userQuery,
     user: { user }
   } = props;
+
+  const [handleOpen, setHandleOpen] = useState({ open: false });
+  const handleClick = () => {
+    setHandleOpen({ open: true });
+  };
 
   return (
     <>
@@ -75,10 +81,21 @@ function User(props) {
                     <Avatar alt='profile image' src={user.avatarUrl} />
                   ) : (
                     user.pictures.map((pic, index) => (
-                      <Avatar key={index} variant='rounded' src={pic} />
+                      <Avatar
+                        onClick={handleClick}
+                        key={index}
+                        variant='rounded'
+                        src={pic}
+                      />
                     ))
                   )}
                 </Grid>
+
+                <PhotosSlider
+                  photos={user.pictures}
+                  handleOpen={handleOpen}
+                  setHandleOpen={setHandleOpen}
+                />
 
                 {/* profile details */}
                 <Grid xs={8}>
@@ -173,7 +190,11 @@ function User(props) {
               )}
 
               {/************************ contact me ********************/}
-              {user.contactInfo && (
+              {(user.contactInfo.skype ||
+                user.contactInfo.facebook ||
+                user.contactInfo.instagram ||
+                user.contactInfo.snapchat ||
+                (user.contactInfo.website && user.contactInfo)) && (
                 <Grid>
                   <h3>Contact me</h3>
                   <List>
