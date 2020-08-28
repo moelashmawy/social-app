@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { initializeApollo } from "../../lib/apollo";
-import { useQuery } from "@apollo/client";
-import Layout from "../../components/Layout";
+import { useMutation } from "@apollo/client";
 import ErrorMessage from "../../components/ToastMessage";
-import { ONE_USER_QUERY, ME_QUERY } from "../../graphql/queries";
+import { ONE_USER_QUERY } from "../../graphql/queries";
 import Head from "next/head";
-import { Grid, Avatar } from "@material-ui/core";
-import Link from "next/link";
+import { Avatar } from "@material-ui/core";
+import { DELETE_PICTURE } from "../../graphql/mutations";
+import UploadProfileImages from "../../components/UploadProfileImages";
 
 function UserPhotos(props) {
   // extract the logged in user
@@ -19,12 +19,36 @@ function UserPhotos(props) {
     user: { user }
   } = props;
 
-  console.log(props);
+  const [
+    deletePicture,
+    { data, loading: deleteLoading, error: deleteError }
+  ] = useMutation(DELETE_PICTURE, {
+    onError(err) {
+      console.log(err);
+    }
+  });
+
+  const [myPhotos, setMyPhotos] = useState(user.pictures);
+
+  const deletePhoto = item => {
+    const newPhotos = myPhotos.filter(photo => photo !== item);
+
+    deletePicture({ variables: { name: item } });
+
+    setMyPhotos(newPhotos);
+  };
 
   return (
     <>
       {userQuery.error && <div>{userQuery.error}</div>}
-      {error && <div>{error}</div>}
+      {deleteError && <ErrorMessage message={deleteError} case='error' />}
+      {error && <ErrorMessage message={error} case='error' />}
+      {data?.deleteProfilePicture.ok && (
+        <ErrorMessage message={data.deleteProfilePicture.successMessage} case='success' />
+      )}
+      {data?.deleteProfilePicture.error && (
+        <ErrorMessage message={data.deleteProfilePicture.error} case='error' />
+      )}
 
       {user && (
         <>
@@ -38,17 +62,32 @@ function UserPhotos(props) {
           </Head>
           <div>Photos</div>
 
-          {/*  {user.pictures && (
-            <Grid container className={classes.root}>
-              <GridList cellHeight={160} className={classes.gridList} cols={3}>
-                {user.pictures.map(tile => (
-                  <GridListTile key={tile} cols={2 || 1}>
-                    <img src={tile}  alt={tile.title} />
-                  </GridListTile>
-                ))}
-              </GridList>
-            </Grid>
-          )} */}
+          {myPhotos.length > 0 && (
+            <div>
+              {myPhotos.map(pic => (
+                <div>
+                  <Avatar src={pic} />
+                  {myProfile.userName == user.userName && (
+                    <span
+                      onClick={() => {
+                        console.log("hi");
+
+                        deletePhoto(pic);
+                      }}>
+                      X
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {myProfile.userName == user.userName && (
+            <div>
+              <h3>Upload more Photos</h3>
+              <UploadProfileImages />
+            </div>
+          )}
         </>
       )}
     </>
