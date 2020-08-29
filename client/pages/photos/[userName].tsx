@@ -4,8 +4,16 @@ import { useMutation } from "@apollo/client";
 import ErrorMessage from "../../components/ToastMessage";
 import { ONE_USER_QUERY } from "../../graphql/queries";
 import Head from "next/head";
-import { Avatar } from "@material-ui/core";
-import { DELETE_PICTURE } from "../../graphql/mutations";
+import {
+  Avatar,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Grid
+} from "@material-ui/core";
+import { DELETE_PICTURE, CHOOSE_PROFILE_PICTURE } from "../../graphql/mutations";
 import UploadProfileImages from "../../components/UploadProfileImages";
 
 function UserPhotos(props) {
@@ -19,6 +27,12 @@ function UserPhotos(props) {
     user: { user }
   } = props;
 
+  const [value, setValue] = React.useState("female");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
+
   const [
     deletePicture,
     { data, loading: deleteLoading, error: deleteError }
@@ -28,8 +42,18 @@ function UserPhotos(props) {
     }
   });
 
+  const [
+    chooseProfilePhoto,
+    { data: choosePhotoData, loading: chooseLoading, error: chooseError }
+  ] = useMutation(CHOOSE_PROFILE_PICTURE, {
+    onError(err) {
+      console.log(err);
+    }
+  });
+
   const [myPhotos, setMyPhotos] = useState(user.pictures);
 
+  // handle delete photo
   const deletePhoto = item => {
     const newPhotos = myPhotos.filter(photo => photo !== item);
 
@@ -45,6 +69,12 @@ function UserPhotos(props) {
       {error && <ErrorMessage message={error} case='error' />}
       {data?.deleteProfilePicture.ok && (
         <ErrorMessage message={data.deleteProfilePicture.successMessage} case='success' />
+      )}
+      {choosePhotoData?.chooseProfilePicture.ok && (
+        <ErrorMessage
+          message={choosePhotoData.chooseProfilePicture.successMessage}
+          case='success'
+        />
       )}
       {data?.deleteProfilePicture.error && (
         <ErrorMessage message={data.deleteProfilePicture.error} case='error' />
@@ -65,19 +95,28 @@ function UserPhotos(props) {
           {myPhotos.length > 0 && (
             <div>
               {myPhotos.map(pic => (
-                <div>
+                <Grid container>
                   <Avatar src={pic} />
                   {myProfile.userName == user.userName && (
-                    <span
-                      onClick={() => {
-                        console.log("hi");
+                    <>
+                      <span
+                        onClick={() => {
+                          deletePhoto(pic);
+                        }}
+                        title='Delete'>
+                        <i className='fa fa-trash' aria-hidden='true'></i>
+                      </span>
 
-                        deletePhoto(pic);
-                      }}>
-                      X
-                    </span>
+                      <span
+                        onClick={() => {
+                          chooseProfilePhoto({ variables: { name: pic } });
+                        }}
+                        title='Set default'>
+                        <i className='fa fa-crosshairs' aria-hidden='true'></i>
+                      </span>
+                    </>
                   )}
-                </div>
+                </Grid>
               ))}
             </div>
           )}
