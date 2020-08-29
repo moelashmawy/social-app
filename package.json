@@ -39,7 +39,7 @@
     "start": "node -r esm server.ts",
     "server": "nodemon -r esm server.ts",
     "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Mohamed Elashmawy",
   "license": "MIT"
