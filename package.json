@@ -36,11 +36,10 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "NODE_ENV=production node -r esm server.ts -p $PORT",
+    "start": "node -r esm server.ts",
     "server": "nodemon -r esm server.ts",
-    "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "next build"
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Mohamed Elashmawy",
   "license": "MIT"
