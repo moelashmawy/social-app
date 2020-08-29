@@ -2,8 +2,6 @@ import { GraphQLServer } from "graphql-yoga";
 import { connectDb } from "./db";
 import typeDefs from "./schema/typeDefs";
 import resolvers from "./schema/resolvers";
-import path from 'path'
-import express from 'express'
 
 // Creating our graphQL server with the schema defined
 const server = new GraphQLServer({
@@ -21,21 +19,9 @@ const server = new GraphQLServer({
 // database connection
 connectDb();
 
-// serve static assets if in production (heroku configuration)
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
-
-if (process.env.NODE_ENV == "production") {
-  // set static folder
-  server.express.use(express.static(path.join(__dirname, "client", "build")));
-
-  server.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
-}
-
 // Server connection options
 const options = {
-  port: 5000,
+  port: process.env.PORT || 5000,
   endpoint: "/graphql",
   subscriptions: "/subscriptions",
   playground: "/graphql",

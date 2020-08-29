@@ -22,7 +22,7 @@ var apolloClient;
 var token;
 var isBrowser = typeof window !== "undefined";
 var httpLink = apollo_upload_client_1.createUploadLink({
-    uri: "/graphql",
+    uri: "http://localhost:5000/graphql",
     credentials: "include",
     fetch: isomorphic_unfetch_1["default"]
 });

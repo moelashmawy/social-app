@@ -10,7 +10,7 @@ let token: string;
 const isBrowser = typeof window !== "undefined";
 
 const httpLink = createUploadLink({
-  uri: "/graphql", // Server URL (must be absolute)
+  uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
