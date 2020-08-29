@@ -36,8 +36,8 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "node -r esm server.ts",
-    "server": "nodemon -r esm server.ts",
+    "start": "node -r esm ./server/index.ts",
+    "server": "nodemon -r esm ./server/index.ts",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

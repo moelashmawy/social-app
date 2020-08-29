@@ -3,6 +3,9 @@ import { connectDb } from "./db";
 import typeDefs from "./schema/typeDefs";
 import resolvers from "./schema/resolvers";
 
+// require .env conf
+require("dotenv").config();
+
 // Creating our graphQL server with the schema defined
 const server = new GraphQLServer({
   typeDefs,
