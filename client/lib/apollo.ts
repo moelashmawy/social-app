@@ -10,7 +10,10 @@ let token: string;
 const isBrowser = typeof window !== "undefined";
 
 const httpLink = createUploadLink({
-  uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
+  uri:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:5000/graphql"
+      : "https://protected-gorge-52048.herokuapp.com/", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });

@@ -22,7 +22,9 @@ var apolloClient;
 var token;
 var isBrowser = typeof window !== "undefined";
 var httpLink = apollo_upload_client_1.createUploadLink({
-    uri: "http://localhost:5000/graphql",
+    uri: process.env.NODE_ENV === "development"
+        ? "http://localhost:5000/graphql"
+        : "https://protected-gorge-52048.herokuapp.com/",
     credentials: "include",
     fetch: isomorphic_unfetch_1["default"]
 });
