@@ -101,7 +101,7 @@ export async function getServerSideProps(ctx: any) {
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      users
+      users: JSON.parse(JSON.stringify(users))
     }
   };
 }

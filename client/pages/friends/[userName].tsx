@@ -1,0 +1,77 @@
+import React from "react";
+import { initializeApollo } from "../../lib/apollo";
+import { ONE_USER_QUERY /* FRIENDS_REQUESTS_QUERY */ } from "../../graphql/queries";
+import Head from "next/head";
+import AppBar from "@material-ui/core/AppBar";
+import Tab from "@material-ui/core/Tab";
+import TabContext from "@material-ui/lab/TabContext";
+import TabList from "@material-ui/lab/TabList";
+import TabPanel from "@material-ui/lab/TabPanel";
+import { makeStyles, Theme, Grid } from "@material-ui/core";
+import FriendsRequests from "../../components/friends/FriendsRequests";
+import FriendsList from "../../components/friends/FriendsList";
+
+const Friends = props => {
+  const [value, setValue] = React.useState("Friends");
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+    setValue(newValue);
+  };
+
+  return (
+    <>
+      <Head>
+        <title>Friends</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+
+      <Grid container>
+        <Grid xs={8} item>
+          <TabContext value={value}>
+            <AppBar position='static'>
+              <TabList onChange={handleChange} aria-label='simple tabs example'>
+                <Tab label='Friends' value='Friends' />
+                <Tab label='Friend requests' value='Friend requests' />
+              </TabList>
+            </AppBar>
+            <TabPanel value='Friends'>
+              <FriendsList friends={props.user.user.friends} />
+            </TabPanel>
+            <TabPanel value='Friend requests'>
+              <FriendsRequests requests={props.user.user.friendsPending} />
+            </TabPanel>
+          </TabContext>
+        </Grid>
+        <Grid item xs={4}>
+          Right Side
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+// Fetch necessary data for the blog post using params.id
+export async function getServerSideProps(ctx) {
+  const apolloClient = initializeApollo();
+
+  // get the cookies from the headers in the request object
+  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
+
+  let oneUserQuery = await apolloClient.query({
+    query: ONE_USER_QUERY,
+    variables: { userName: ctx.params.userName }
+  });
+
+  let user = oneUserQuery.data.userInfo;
+
+  console.log(oneUserQuery);
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+      user: JSON.parse(JSON.stringify(user))
+    }
+  };
+}
+
+export default Friends;

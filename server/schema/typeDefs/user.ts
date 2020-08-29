@@ -33,6 +33,7 @@ const userTypeDef = `
     role: String!
     birthday: String
     friends: [User!]
+    friendsPending: [User!]
     chats: [Chat!]
     messages: [Message]
     status: String
@@ -63,6 +64,12 @@ const userTypeDef = `
     error: String
   }
 
+  type FriendRequestsQuery{
+    ok: Boolean!
+    friends: [User!]
+    error: String
+  }
+
   type UserPayload{
     ok: Boolean!
     successMessage: String
@@ -82,6 +89,19 @@ const userTypeDef = `
 
   type UploadProfilePicturesPayload{
     ok: Boolean!
+    error: String
+    successMessage: String
+  }
+
+  type DeleteProfilePicturePayload{
+    ok: Boolean!
+    error: String
+    successMessage: String
+  }
+
+  type ChoosePicturePayload{
+    ok: Boolean!
+    error: String
     successMessage: String
   }
 
@@ -91,10 +111,23 @@ const userTypeDef = `
     successMessage: String
   }
 
+  type AddFriendPayload{
+    ok: Boolean!
+    error: String
+    successMessage: String
+  }
+
+  type AcceptFriendPayload{
+    ok: Boolean!
+    error: String
+    successMessage: String
+  }
+
   extend type Query {
     me: OneUserQuery!
     users: AllUsersQuery! 
     userInfo(userName: String!): OneUserQuery!
+    friendRequests(userName: String!): FriendRequestsQuery!
   }
 
   extend type Mutation {
@@ -117,6 +150,10 @@ const userTypeDef = `
 
     uploadProfilePictures(file: [Upload!]): UploadProfilePicturesPayload!
 
+    deleteProfilePicture(name: String): DeleteProfilePicturePayload!
+
+    chooseProfilePicture(name: String): ChoosePicturePayload!
+
     updateProfileInfo(
       firstName: String,
       lastName: String,
@@ -138,6 +175,11 @@ const userTypeDef = `
       tvShows: [String!],
     ): UpdateProfilePayload!
     
+
+    addFriend(id: ID!): AddFriendPayload!
+
+    acceptFriend(id: ID!): AcceptFriendPayload!
+
   }
 `;
 

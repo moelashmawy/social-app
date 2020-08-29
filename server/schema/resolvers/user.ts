@@ -85,7 +85,12 @@ const userResolver = {
 
         let myId = req.user.userId;
 
-        let me = User.findById(myId).exec();
+        let me = User.findById(myId)
+          .populate({
+            path: "friendsPending",
+            model: "NewUser"
+          })
+          .exec();
 
         return {
           ok: true,
@@ -104,9 +109,20 @@ const userResolver = {
       try {
         await userAuth(req);
 
+        let allUsers = await User.find()
+          .populate({
+            path: "friendsPending",
+            model: "NewUser"
+          })
+          .populate({
+            path: "friends",
+            model: "NewUser"
+          })
+          .exec();
+
         return {
           ok: true,
-          users: await User.find()
+          users: allUsers
         };
       } catch (error) {
         return {
@@ -121,8 +137,49 @@ const userResolver = {
       try {
         //await userAuth(req);
 
+        let user = await User.findOne({ userName: userName })
+          .populate({
+            path: "friendsPending",
+            model: "NewUser"
+          })
+          .populate({
+            path: "friends",
+            model: "NewUser"
+          })
+          .exec();
+
         return {
-          user: await User.findOne({ userName: userName }).exec(),
+          user: user,
+          ok: true
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          error: error.message
+        };
+      }
+    },
+
+    // fetch friends requests
+    friendRequests: async (parent: any, args, { req, res }) => {
+      try {
+        await userAuth(req);
+
+        const myId = req.user.userId;
+
+        const user = await User.findOne({ userName: args.userName })
+          .populate({
+            path: "friendsPending",
+            model: "NewUser"
+          })
+          .populate({
+            path: "friends",
+            model: "NewUser"
+          })
+          .exec();
+
+        return {
+          friends: user.friendsPending,
           ok: true
         };
       } catch (error) {
@@ -298,6 +355,59 @@ const userResolver = {
         };
       }
     },
+    // delete profile picture
+    deleteProfilePicture: async (_, { name }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- find pic and delete
+        User.findByIdAndUpdate(
+          { _id: myId },
+          { $pull: { pictures: name } },
+          { useFindAndModify: false, upsert: true }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Picture was deleted"
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e.message
+        };
+      }
+    },
+
+    // choose profile picture
+    chooseProfilePicture: async (_, { name }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- find pic and delete
+        User.findByIdAndUpdate(
+          { _id: myId },
+          { $set: { avatarUrl: name } },
+          { useFindAndModify: false, upsert: true }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Profile photo was updated"
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e.message
+        };
+      }
+    },
     // update User info
     updateProfileInfo: async (_, args, { req, res }) => {
       try {
@@ -324,6 +434,57 @@ const userResolver = {
         return {
           ok: false,
           error: error.message
+        };
+      }
+    },
+    // add friend
+    addFriend: async (_, { id }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- find the friend you wanna add and update its pending friends array
+        await User.findByIdAndUpdate(
+          { _id: id },
+          { $push: { friendsPending: myId } },
+          { useFindAndModify: false }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Friends Request sent"
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e.message
+        };
+      }
+    },
+    // accept friend request
+    acceptFriend: async (_, { id }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- find the friend you wanna add and update its pending friends array
+        User.findOneAndUpdate(
+          { _id: myId },
+          { $push: { friends: id }, $pull: { friendsPending: id } }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "You're now friends"
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e.message
         };
       }
     }

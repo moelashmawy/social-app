@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { initializeApollo } from "../../lib/apollo";
-import { useQuery } from "@apollo/client";
-import Layout from "../../components/Layout";
-import ErrorMessage from "../../components/ToastMessage";
-import { ONE_USER_QUERY, ME_QUERY } from "../../graphql/queries";
+import { ONE_USER_QUERY } from "../../graphql/queries";
 import Head from "next/head";
 import {
   Grid,
@@ -16,6 +13,10 @@ import {
 } from "@material-ui/core";
 import Link from "next/link";
 import PhotosSlider from "../../components/user-profile/PhotosSlider";
+import UploadProfileImages from "../../components/UploadProfileImages";
+import { useMutation } from "@apollo/client";
+import { ADD_FRIEND_MUTATION } from "../../graphql/mutations";
+import ErrorMessage from "../../components/ToastMessage";
 
 /**
  * This page will render the user's profile
@@ -38,10 +39,19 @@ function User(props) {
     setHandleOpen({ open: true });
   };
 
+  // handle add friend mutation
+  const [add_friend, { data }] = useMutation(ADD_FRIEND_MUTATION);
+
   return (
     <>
-      {userQuery.error && <div>{userQuery.error}</div>}
+      {userQuery.error && <ErrorMessage message={userQuery.error} case='error' />}
+
+      {error && <ErrorMessage message={error} case='error' />}
       {error && <div>{error}</div>}
+
+      {data?.addFriend.ok && (
+        <ErrorMessage message={data.addFriend.successMessage} case='success' />
+      )}
 
       {user && (
         <>
@@ -69,7 +79,6 @@ function User(props) {
                       <a>Edit Profile</a>
                     </Link>
                   </Grid>
-                  <Grid>Add Photos</Grid>
                 </Grid>
               )}
 
@@ -127,7 +136,12 @@ function User(props) {
                 <div>
                   <span>Message</span>
                   <span>Bookmark</span>
-                  <span>Add Friend</span>
+                  <span
+                    onClick={() => {
+                      add_friend({ variables: { id: user.id } });
+                    }}>
+                    Add Friend
+                  </span>
                   <span>Comments</span>
                 </div>
               )}
@@ -274,7 +288,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
-      user
+      user: JSON.parse(JSON.stringify(user))
     }
   };
 }

@@ -7,7 +7,6 @@ import { red, blue, green } from "@material-ui/core/colors";
 const PhotosSlider = ({ handleOpen, setHandleOpen, photos }) => {
   return (
     <div>
-      {/* <Button onClick={() => setHandleOpen({ open: true })}>Open carousel</Button> */}
       <AutoRotatingCarousel
         //label='Get started'
         open={handleOpen.open}

@@ -14,6 +14,7 @@ export interface IUser extends mongoose.Document {
   avatarUrl: string;
   role: string;
   birthday: string;
+  friendsPending: Array<any>;
   friends: Array<any>;
   messages: Array<any>;
   chats: Array<any>;
@@ -47,6 +48,7 @@ const UserSchema = new Schema(
     avatarUrl: { type: String },
     role: { type: String, required: true },
     birthday: { type: String },
+    friendsPending: { type: [Schema.Types.ObjectId], ref: "NewUser" },
     friends: { type: [Schema.Types.ObjectId], ref: "NewUser" },
     messages: { type: [Schema.Types.ObjectId], ref: "Message" },
     chats: { type: [Schema.Types.ObjectId], ref: "Chat" },

@@ -64,7 +64,7 @@ function Header(props) {
           )}
 
           {me.ok && (
-            <Link href='/friends'>
+            <Link href='/friends/[userName]' as={`/friends/${me.user.userName}`}>
               <a>Friends</a>
             </Link>
           )}

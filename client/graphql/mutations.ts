@@ -65,6 +65,29 @@ export const UPLOAD_PICTURES = gql`
   mutation uploadProfilePictures($file: [Upload!]) {
     uploadProfilePictures(file: $file) {
       ok
+      error
+      successMessage
+    }
+  }
+`;
+
+// upload profile pics mutation
+export const DELETE_PICTURE = gql`
+  mutation deleteProfilePicture($name: String) {
+    deleteProfilePicture(name: $name) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
+
+// update profile photo mutation
+export const CHOOSE_PROFILE_PICTURE = gql`
+  mutation chooseProfilePicture($name: String) {
+    chooseProfilePicture(name: $name) {
+      ok
+      error
       successMessage
     }
   }
@@ -115,6 +138,28 @@ export const UPDATE_PROGILE_MUTATION = gql`
       ok
       successMessage
       error
+    }
+  }
+`;
+
+// Add friend (send friend request)
+export const ADD_FRIEND_MUTATION = gql`
+  mutation addFriend($id: ID!) {
+    addFriend(id: $id) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
+
+// Add friend (send friend request)
+export const ACCEPT_FRIEND_MUTATION = gql`
+  mutation acceptFriend($id: ID!) {
+    acceptFriend(id: $id) {
+      ok
+      error
+      successMessage
     }
   }
 `;
