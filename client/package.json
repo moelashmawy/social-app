@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
-    "eroku-postbuild": "next build"
+    "heroku-postbuild": "next build"
   },
   "dependencies": {
     "@apollo/client": "^3.0.2",
