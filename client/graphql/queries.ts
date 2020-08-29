@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+// fetch the current logged in user query
 export const ME_QUERY = gql`
   query myAccountInfo {
     me {
@@ -18,8 +19,13 @@ export const ME_QUERY = gql`
         avatarUrl
         role
         birthday
-        friends {
+
+        friendsPending {
           id
+          userName
+          firstName
+          lastName
+          avatarUrl
         }
         chats {
           id
@@ -52,6 +58,7 @@ export const ME_QUERY = gql`
   }
 `;
 
+// fetch one user query
 export const ONE_USER_QUERY = gql`
   query userInfo($userName: String!) {
     userInfo(userName: $userName) {
@@ -72,6 +79,17 @@ export const ONE_USER_QUERY = gql`
         birthday
         friends {
           id
+          userName
+          firstName
+          lastName
+          avatarUrl
+        }
+        friendsPending {
+          id
+          userName
+          firstName
+          lastName
+          avatarUrl
         }
         chats {
           id
@@ -104,6 +122,7 @@ export const ONE_USER_QUERY = gql`
   }
 `;
 
+// fetch all users query
 export const ALL_USERS_QUERY = gql`
   query getAllUsers {
     users {
@@ -122,9 +141,14 @@ export const ALL_USERS_QUERY = gql`
         avatarUrl
         role
         birthday
-        friends {
+        friendsPending {
           id
+          userName
+          firstName
+          lastName
+          avatarUrl
         }
+
         chats {
           id
         }
@@ -155,3 +179,20 @@ export const ALL_USERS_QUERY = gql`
     }
   }
 `;
+
+/* // fetch user friends requests query
+export const FRIENDS_REQUESTS_QUERY = gql`
+  query friendRequests($userName: String!) {
+    friendRequests(userName: $userName) {
+      ok
+      error
+      friends {
+        id
+        userName
+        firstName
+        lastName
+        avatarUrl
+      }
+    }
+  }
+`; */
