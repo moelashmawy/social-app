@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var graphql_yoga_1 = require("graphql-yoga");
-var db_1 = require("./db");
+var index_1 = require("./db/index");
 var typeDefs_1 = require("./schema/typeDefs");
 var resolvers_1 = require("./schema/resolvers");
 // require .env conf
@@ -20,7 +20,7 @@ var server = new graphql_yoga_1.GraphQLServer({
     }
 });
 // database connection
-db_1.connectDb();
+index_1.connectDb();
 // Server connection options
 var options = {
     port: process.env.PORT || 5000,
