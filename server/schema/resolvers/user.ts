@@ -10,37 +10,7 @@ import { userAuth, adminAuth } from "../../middlewares/auth";
 import { GraphQLError } from "graphql";
 var cloudinary = require("cloudinary").v2;
 
-/* // in case for local upload
-const uploadDir = "./client/public/images/users_images";
-
-// Ensure upload directory exists
-mkdirp.sync(uploadDir);
-
-const storeUpload = async ({ stream, filename }: any): Promise<any> => {
-  const id = shortid.generate();
-  const fileName = `${id}-${filename}`;
-  const path = `${uploadDir}/${id}-${filename}`;
-
-  return new Promise((resolve, reject) =>
-    stream
-      .pipe(createWriteStream(path))
-      .on("finish", () => resolve({ path, fileName }))
-      .on("error", reject)
-  );
-};
-
-const processUpload = async (upload: any) => {
-  const { createReadStream, filename } = await upload;
-  const stream = createReadStream();
-  const { path, fileName } = await storeUpload({ stream, filename });
-
-  console.log(path, fileName);
-
-  return { path, fileName };
-}; */
-
-let resultUrl = "",
-  resultSecureUrl = "";
+let resultUrl = "";
 
 const cloudinaryUpload = async ({ stream }) => {
   const cloudinary = require("cloudinary");
@@ -55,7 +25,6 @@ const cloudinaryUpload = async ({ stream }) => {
       const streamLoad = cloudinary.v2.uploader.upload_stream(function (error, result) {
         if (result) {
           resultUrl = result.secure_url;
-          resultSecureUrl = result.secure_url;
           resolve(resultUrl);
         } else {
           reject(error);
