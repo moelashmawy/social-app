@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import { GraphQLError } from "graphql";
+import User from "./../models/User";
 
 // authenticate user
 export const userAuth = async (req: any) => {
@@ -10,6 +11,7 @@ export const userAuth = async (req: any) => {
     token = authHeader.split("=")[1];
   }
 
+  // check if the authentication exists
   if (!authHeader || authHeader === null || !token || token === null) {
     req.isAuth = false;
     req.user = null;

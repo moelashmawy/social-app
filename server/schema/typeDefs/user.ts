@@ -22,7 +22,6 @@ const userTypeDef = `
     id: ID
     userName: String!
     email: String!
-    password: String!
     firstName: String!
     lastName: String!
     gender: String
@@ -34,6 +33,7 @@ const userTypeDef = `
     birthday: String
     friends: [User!]
     friendsPending: [User!]
+    bookmarks: [User!]
     chats: [Chat!]
     messages: [Message]
     status: String
@@ -77,47 +77,7 @@ const userTypeDef = `
     user: User
   } 
 
-  type LogoutPayload{
-    ok: Boolean!
-  } 
-
-  type DeleteUserPayload{
-    ok: Boolean!
-    successMessage: String
-    error: String
-  }
-
-  type UploadProfilePicturesPayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
-  type DeleteProfilePicturePayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
-  type ChoosePicturePayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
-  type UpdateProfilePayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
-  type AddFriendPayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
-  type AcceptFriendPayload{
+  type ActionPayload{
     ok: Boolean!
     error: String
     successMessage: String
@@ -144,15 +104,15 @@ const userTypeDef = `
 
     login(userName: String!, password: String!): UserPayload!
 
-    logout: LogoutPayload
+    logout: ActionPayload!
 
-    deleteUser(id:ID!): DeleteUserPayload
+    deleteUser(id:ID!): ActionPayload!
 
-    uploadProfilePictures(file: [Upload!]): UploadProfilePicturesPayload!
+    uploadProfilePictures(file: [Upload!]): ActionPayload!
 
-    deleteProfilePicture(name: String): DeleteProfilePicturePayload!
+    deleteProfilePicture(name: String): ActionPayload!
 
-    chooseProfilePicture(name: String): ChoosePicturePayload!
+    chooseProfilePicture(name: String): ActionPayload!
 
     updateProfileInfo(
       firstName: String,
@@ -173,12 +133,18 @@ const userTypeDef = `
       books: [String!],
       movies: [String!],
       tvShows: [String!],
-    ): UpdateProfilePayload!
+    ): ActionPayload!
     
 
-    addFriend(id: ID!): AddFriendPayload!
+    addFriend(id: ID!): ActionPayload!
 
-    acceptFriend(id: ID!): AcceptFriendPayload!
+    acceptFriend(id: ID!): ActionPayload!
+
+    deleteFriend(id: ID!): ActionPayload!
+
+    addBookmark(id: ID!): ActionPayload!
+
+    deleteBookmark(id: ID!): ActionPayload!
 
   }
 `;

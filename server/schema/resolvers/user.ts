@@ -7,6 +7,7 @@ import {
 import { loginValidatation } from "./../../middlewares/validation/userValidation";
 import * as jwt from "jsonwebtoken";
 import { userAuth, adminAuth } from "../../middlewares/auth";
+import { GraphQLError } from "graphql";
 var cloudinary = require("cloudinary").v2;
 
 /* // in case for local upload
@@ -88,6 +89,10 @@ const userResolver = {
         let me = User.findById(myId)
           .populate({
             path: "friendsPending",
+            model: "NewUser"
+          })
+          .populate({
+            path: "bookmarks",
             model: "NewUser"
           })
           .exec();
@@ -308,7 +313,7 @@ const userResolver = {
     deleteUser: async (_, args, { req, res }) => {
       try {
         // 1- authenticate user
-        await userAuth(req);
+        await adminAuth(req);
 
         // 2- find user
         const id = args.id;
@@ -445,7 +450,14 @@ const userResolver = {
 
         let myId = req.user.userId;
 
-        // 2- find the friend you wanna add and update its pending friends array
+        //2- check if the 2 accounts are already friends
+        const user = await User.findOne({ _id: myId }).exec();
+        if (user.friends.includes(id)) {
+          throw new GraphQLError("You're already friends");
+        }
+
+        // if they aren't friends
+        // 3- find the friend you wanna add and update its pending friends array
         await User.findByIdAndUpdate(
           { _id: id },
           { $push: { friendsPending: myId } },
@@ -456,10 +468,10 @@ const userResolver = {
           ok: true,
           successMessage: "Friends Request sent"
         };
-      } catch (e) {
+      } catch (error) {
         return {
           ok: false,
-          error: e.message
+          error: error.message
         };
       }
     },
@@ -472,10 +484,13 @@ const userResolver = {
         let myId = req.user.userId;
 
         // 2- find the friend you wanna add and update its pending friends array
-        User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: myId },
           { $push: { friends: id }, $pull: { friendsPending: id } }
         ).exec();
+
+        // 3- update my friends list
+        await User.findOneAndUpdate({ _id: id }, { $push: { friends: myId } }).exec();
 
         return {
           ok: true,
@@ -485,6 +500,93 @@ const userResolver = {
         return {
           ok: false,
           error: e.message
+        };
+      }
+    },
+    // delete friend
+    deleteFriend: async (_, { id }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- update my friends list
+        await User.findOneAndUpdate({ _id: myId }, { $pull: { friends: id } }).exec();
+
+        // 3- update the other friend friends list
+        await User.findOneAndUpdate({ _id: id }, { $pull: { friends: myId } }).exec();
+
+        return {
+          ok: true,
+          successMessage: "You're not friends anymore"
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e.message
+        };
+      }
+    },
+    // add bookmark
+    addBookmark: async (_, { id }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 2- check if the user already in bookmarks
+        const user = await User.findOne({ _id: myId }).exec();
+        if (user.bookmarks.includes(id)) {
+          throw new GraphQLError("Already in your bookmarks");
+        }
+
+        // 3- find the friend you wanna add and update its pending friends array
+        await User.findByIdAndUpdate(
+          { _id: myId },
+          { $push: { bookmarks: id } },
+          { useFindAndModify: false }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Added to bookmarks",
+          error: null
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          error: error.message,
+          successMessage: null
+        };
+      }
+    },
+    // delete bookmark
+    deleteBookmark: async (_, { id }, { req, res }) => {
+      try {
+        // 1- authenticate user
+        await userAuth(req);
+
+        let myId = req.user.userId;
+
+        // 3- find the friend you wanna add and update its pending friends array
+        await User.findByIdAndUpdate(
+          { _id: myId },
+          { $pull: { bookmarks: id } },
+          { useFindAndModify: false }
+        ).exec();
+
+        return {
+          ok: true,
+          successMessage: "Deleted from bookmarks",
+          error: null
+        };
+      } catch (error) {
+        return {
+          ok: false,
+          error: error.message,
+          successMessage: null
         };
       }
     }

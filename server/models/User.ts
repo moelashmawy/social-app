@@ -16,6 +16,7 @@ export interface IUser extends mongoose.Document {
   birthday: string;
   friendsPending: Array<any>;
   friends: Array<any>;
+  bookmarks: Array<any>;
   messages: Array<any>;
   chats: Array<any>;
   gender: string;
@@ -50,6 +51,7 @@ const UserSchema = new Schema(
     birthday: { type: String },
     friendsPending: { type: [Schema.Types.ObjectId], ref: "NewUser" },
     friends: { type: [Schema.Types.ObjectId], ref: "NewUser" },
+    bookmarks: { type: [Schema.Types.ObjectId], ref: "NewUser" },
     messages: { type: [Schema.Types.ObjectId], ref: "Message" },
     chats: { type: [Schema.Types.ObjectId], ref: "Chat" },
     gender: { type: String, required: true },

@@ -19,8 +19,14 @@ export const ME_QUERY = gql`
         avatarUrl
         role
         birthday
-
         friendsPending {
+          id
+          userName
+          firstName
+          lastName
+          avatarUrl
+        }
+        bookmarks {
           id
           userName
           firstName

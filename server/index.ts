@@ -2,8 +2,6 @@ import { GraphQLServer } from "graphql-yoga";
 import { connectDb } from "./db/index";
 import typeDefs from "./schema/typeDefs";
 import resolvers from "./schema/resolvers";
-
-// require .env conf
 require("dotenv").config();
 
 // Creating our graphQL server with the schema defined

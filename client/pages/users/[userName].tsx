@@ -13,9 +13,8 @@ import {
 } from "@material-ui/core";
 import Link from "next/link";
 import PhotosSlider from "../../components/user-profile/PhotosSlider";
-import UploadProfileImages from "../../components/UploadProfileImages";
 import { useMutation } from "@apollo/client";
-import { ADD_FRIEND_MUTATION } from "../../graphql/mutations";
+import { ADD_BOOKMARK_MUTATION, ADD_FRIEND_MUTATION } from "../../graphql/mutations";
 import ErrorMessage from "../../components/ToastMessage";
 
 /**
@@ -42,6 +41,9 @@ function User(props) {
   // handle add friend mutation
   const [add_friend, { data }] = useMutation(ADD_FRIEND_MUTATION);
 
+  // handle add friend mutation
+  const [add_bookmark, { data: bookmarkData }] = useMutation(ADD_BOOKMARK_MUTATION);
+
   return (
     <>
       {userQuery.error && <ErrorMessage message={userQuery.error} case='error' />}
@@ -51,6 +53,18 @@ function User(props) {
 
       {data?.addFriend.ok && (
         <ErrorMessage message={data.addFriend.successMessage} case='success' />
+      )}
+
+      {data?.addFriend.error && (
+        <ErrorMessage message={data.addFriend.error} case='error' />
+      )}
+
+      {bookmarkData?.addBookmark.ok && (
+        <ErrorMessage message={bookmarkData.addBookmark.successMessage} case='success' />
+      )}
+
+      {bookmarkData?.addBookmark.error && (
+        <ErrorMessage message={bookmarkData.addBookmark.error} case='error' />
       )}
 
       {user && (
@@ -135,7 +149,12 @@ function User(props) {
               {myProfile?.userName != user?.userName && (
                 <div>
                   <span>Message</span>
-                  <span>Bookmark</span>
+                  <span
+                    onClick={() => {
+                      add_bookmark({ variables: { id: user.id } });
+                    }}>
+                    Bookmark
+                  </span>
                   <span
                     onClick={() => {
                       add_friend({ variables: { id: user.id } });

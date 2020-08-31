@@ -4,7 +4,6 @@ var graphql_yoga_1 = require("graphql-yoga");
 var index_1 = require("./db/index");
 var typeDefs_1 = require("./schema/typeDefs");
 var resolvers_1 = require("./schema/resolvers");
-// require .env conf
 require("dotenv").config();
 // Creating our graphQL server with the schema defined
 var server = new graphql_yoga_1.GraphQLServer({

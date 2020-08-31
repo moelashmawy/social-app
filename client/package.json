@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "heroku-postbuild": "next build"
+    "build": "next build && mv build ../public",
+    "start": "next start"
   },
   "dependencies": {
     "@apollo/client": "^3.0.2",

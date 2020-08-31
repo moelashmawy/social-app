@@ -163,3 +163,36 @@ export const ACCEPT_FRIEND_MUTATION = gql`
     }
   }
 `;
+
+// delete friend
+export const DELETE_FRIEND_MUTATION = gql`
+  mutation deleteFriend($id: ID!) {
+    deleteFriend(id: $id) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
+
+// Add profile to bookmarks
+export const ADD_BOOKMARK_MUTATION = gql`
+  mutation addBookmark($id: ID!) {
+    addBookmark(id: $id) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
+
+// Delete profile to bookmarks
+export const DELETE_BOOKMARK_MUTATION = gql`
+  mutation deleteBookmark($id: ID!) {
+    deleteBookmark(id: $id) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
