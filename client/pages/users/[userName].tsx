@@ -14,7 +14,11 @@ import {
 import Link from "next/link";
 import PhotosSlider from "../../components/user-profile/PhotosSlider";
 import { useMutation } from "@apollo/client";
-import { ADD_BOOKMARK_MUTATION, ADD_FRIEND_MUTATION } from "../../graphql/mutations";
+import {
+  ADD_BOOKMARK_MUTATION,
+  ADD_FRIEND_MUTATION,
+  CREATE_NEW_CHAT_MUTATION
+} from "../../graphql/mutations";
 import ErrorMessage from "../../components/ToastMessage";
 
 /**
@@ -43,6 +47,9 @@ function User(props) {
 
   // handle add friend mutation
   const [add_bookmark, { data: bookmarkData }] = useMutation(ADD_BOOKMARK_MUTATION);
+
+  // handle create new chat mutation
+  const [create_new_chat, { data: newChatData }] = useMutation(CREATE_NEW_CHAT_MUTATION);
 
   return (
     <>
@@ -148,7 +155,14 @@ function User(props) {
               {/*  Message - Bookmark - Add Friend - Comments - Block - Report */}
               {myProfile?.userName != user?.userName && (
                 <div>
-                  <span>Message</span>
+                  <span
+                    onClick={() => {
+                      create_new_chat({
+                        variables: { users: [user.id, myProfile.id] }
+                      });
+                    }}>
+                    Message
+                  </span>
                   <span
                     onClick={() => {
                       add_bookmark({ variables: { id: user.id } });

@@ -1,8 +1,10 @@
-import { GraphQLServer } from "graphql-yoga";
+import { GraphQLServer, PubSub } from "graphql-yoga";
 import { connectDb } from "./db/index";
 import typeDefs from "./schema/typeDefs";
 import resolvers from "./schema/resolvers";
 require("dotenv").config();
+
+const pubsub = new PubSub();
 
 // Creating our graphQL server with the schema defined
 const server = new GraphQLServer({
@@ -12,7 +14,8 @@ const server = new GraphQLServer({
     return {
       req: request,
       res: response,
-      token: request.headers.token
+      token: request.headers.token,
+      pubsub
     };
   }
 });

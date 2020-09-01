@@ -93,8 +93,6 @@ export async function getServerSideProps(ctx) {
 
   let user = oneUserQuery.data.userInfo;
 
-  console.log(oneUserQuery);
-
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),

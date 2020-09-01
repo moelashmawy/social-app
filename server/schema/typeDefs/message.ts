@@ -1,16 +1,27 @@
 // defines message typeDef
 
 const messageTypeDef = `
-  type Message {
+  
+
+`;
+
+export default messageTypeDef;
+
+/* type Message {
     id: ID
     text: String!
     user: User!
     chat: Chat!
   }
 
-  extend type Query{
-    allMessages: [Message!]
+  type MessagePayload{
+    ok: Boolean!
   }
-`;
 
-export default messageTypeDef;
+  extend type Query{
+    oneChatMessages(chatId:ID!): [Message!]
+  }
+
+  extend type Mutation {
+    sendMessage(text: String!, user: ID!, chat: ID): MessagePayload!
+  } */

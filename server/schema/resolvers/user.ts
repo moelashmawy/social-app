@@ -1,4 +1,3 @@
-import db from "./../dummy";
 import User from "./../../models/User";
 import {
   signupvalidatation,
@@ -8,10 +7,9 @@ import { loginValidatation } from "./../../middlewares/validation/userValidation
 import * as jwt from "jsonwebtoken";
 import { userAuth, adminAuth } from "../../middlewares/auth";
 import { GraphQLError } from "graphql";
-var cloudinary = require("cloudinary").v2;
 
+// handle image upload
 let resultUrl = "";
-
 const cloudinaryUpload = async ({ stream }) => {
   const cloudinary = require("cloudinary");
   cloudinary.config({

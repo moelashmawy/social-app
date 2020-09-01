@@ -58,8 +58,8 @@ function Header(props) {
           )}
 
           {me.ok && (
-            <Link href='/messages'>
-              <a>Messages</a>
+            <Link href='/chat'>
+              <a>Chat</a>
             </Link>
           )}
 

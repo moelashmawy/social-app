@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const ChatSchema = new Schema(
   {
-    users: { type: [Schema.Types.ObjectId], ref: "User" },
+    users: { type: [Schema.Types.ObjectId], ref: "NewUser" },
     messages: { type: [Schema.Types.ObjectId], ref: "Message" }
   },
   { timestamps: true }

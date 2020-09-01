@@ -186,19 +186,63 @@ export const ALL_USERS_QUERY = gql`
   }
 `;
 
-/* // fetch user friends requests query
-export const FRIENDS_REQUESTS_QUERY = gql`
-  query friendRequests($userName: String!) {
-    friendRequests(userName: $userName) {
+// fetch all user chats query
+export const ALL_USER_CHATS_QUERY = gql`
+  query userChats {
+    userChats {
       ok
       error
-      friends {
+      chats {
         id
-        userName
-        firstName
-        lastName
-        avatarUrl
+        users {
+          id
+          userName
+          firstName
+          lastName
+          avatarUrl
+        }
+        messages {
+          id
+          text
+          user {
+            id
+            userName
+            firstName
+            lastName
+            avatarUrl
+          }
+        }
       }
     }
   }
-`; */
+`;
+
+export const GET_MESSAGES = gql`
+  subscription {
+    userChats {
+      ok
+      error
+      chats {
+        id
+        users {
+          id
+          userName
+          firstName
+          lastName
+          avatarUrl
+        }
+        messages {
+          id
+          text
+          user {
+            id
+            userName
+            firstName
+            lastName
+            avatarUrl
+          }
+        }
+      }
+    }
+  }
+`;

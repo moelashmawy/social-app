@@ -196,3 +196,28 @@ export const DELETE_BOOKMARK_MUTATION = gql`
     }
   }
 `;
+
+// Delete profile to bookmarks
+export const CREATE_NEW_CHAT_MUTATION = gql`
+  mutation createNewChat($users: [ID!]) {
+    createNewChat(users: $users) {
+      ok
+      error
+      successMessage
+      chat {
+        id
+      }
+    }
+  }
+`;
+
+// Delete profile to bookmarks
+export const SEND_MESSAGE_MUTATION = gql`
+  mutation sendMessage($user: ID!, $chat: ID, $text: String!) {
+    sendMessage(user: $user, chat: $chat, text: $text) {
+      ok
+      error
+      successMessage
+    }
+  }
+`;
