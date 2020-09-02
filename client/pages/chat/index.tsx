@@ -18,6 +18,7 @@ import { SEND_MESSAGE_MUTATION } from "../../graphql/mutations";
 import Link from "next/link";
 import { initializeApollo } from "../../lib/apollo";
 import { SEND_MESSAGE_SUB } from "../../graphql/subscription";
+import ErrorMessage from "../../components/ToastMessage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -123,7 +124,6 @@ export default function index(props: any) {
 
   return (
     <div className={classes.root}>
-      {loading && <div>loading....</div>}
       <Tabs
         orientation='vertical'
         variant='scrollable'
