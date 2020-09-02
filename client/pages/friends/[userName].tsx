@@ -81,6 +81,15 @@ const Friends = props => {
 
 // Fetch necessary data for the blog post using params.id
 export async function getServerSideProps(ctx) {
+  //redirect if there is no authentcated user
+  if (!ctx.req.headers.cookie) {
+    ctx.res.writeHead(302, {
+      // or 301
+      Location: "/"
+    });
+    ctx.res.end();
+  }
+
   const apolloClient = initializeApollo();
 
   // get the cookies from the headers in the request object
