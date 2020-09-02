@@ -15,8 +15,8 @@ const isBrowser = typeof window !== "undefined";
 // http link
 const httpLink = createUploadLink({
   uri:
-    process.env.NODE_ENV === "production"
-      ? "yarab-yshtaghal.herokuapp.com"
+    process.env.NODE_ENV == "production"
+      ? "https://yarab-yshtaghal.herokuapp.com"
       : "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
