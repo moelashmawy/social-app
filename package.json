@@ -35,8 +35,8 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "node ./server/index.ts",
-    "server": "nodemon ./server/index.ts",
+    "start": "node server/index.ts",
+    "server": "nodemon server/index.ts",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
