@@ -63,7 +63,7 @@ function createApolloClient() {
   return new ApolloClient({
     uri: "http://localhost:5000/graphql",
     ssrMode: !isBrowser,
-    link: authLink.concat(splitLink as any), //authLink.concat(splitLink /*  as any */),
+    link: authLink.concat(splitLink as any),
     cache: new InMemoryCache()
   });
 }
