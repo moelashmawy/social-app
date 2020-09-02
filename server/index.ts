@@ -2,7 +2,9 @@ import { GraphQLServer, PubSub } from "graphql-yoga";
 import { connectDb } from "./db/index";
 import typeDefs from "./schema/typeDefs";
 import resolvers from "./schema/resolvers";
+import path = require("path");
 require("dotenv").config();
+const express = require("express");
 
 const pubsub = new PubSub();
 
@@ -22,6 +24,17 @@ const server = new GraphQLServer({
 
 // database connection
 connectDb();
+
+server.use("/static", express.static(path.join(__dirname, "static")));
+
+if (process.env.NODE_ENV == "production") {
+  // set static folder
+  server.use(express.static(path.join(__dirname, "client", "build")));
+
+  server.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
 
 // Server connection options
 const options = {
