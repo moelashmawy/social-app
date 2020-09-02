@@ -33,10 +33,7 @@ const options = {
   playground: "/graphql",
   cors: {
     credentials: true,
-    origin:
-      process.env.NODE_ENV === "development"
-        ? ["http://localhost:3000"]
-        : ["https://social-app.hamohuh.vercel.app"] // your frontend url.
+    origin: ["http://localhost:3000"] // your frontend url.
   }
 };
 

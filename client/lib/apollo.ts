@@ -14,10 +14,7 @@ const isBrowser = typeof window !== "undefined";
 
 // http link
 const httpLink = createUploadLink({
-  uri:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:5000/graphql"
-      : "https://social-app.hamohuh.vercel.app", // Server URL (must be absolute)
+  uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
@@ -67,10 +64,7 @@ const authLink = setContext((_, { headers }) => {
 // create an apollo client
 function createApolloClient() {
   return new ApolloClient({
-    uri:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5000/graphql"
-        : "/graphql",
+    uri: "/graphql",
     ssrMode: !isBrowser,
     link: authLink.concat(splitLink as any),
     cache: new InMemoryCache()
