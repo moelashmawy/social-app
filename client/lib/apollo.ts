@@ -14,11 +14,11 @@ const isBrowser = typeof window !== "undefined";
 
 // http link
 const httpLink = createUploadLink({
-  uri:
-    process.env.NODE_ENV === "development"
+  uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
+  /*  process.env.NODE_ENV === "development"
       ? "http://localhost:5000/graphql"
-      : process.env.GRAPHQL_URI, // Server URL (must be absolute)
-  credentials: "include", // Additional fetch() options like `credentials` or `headers`
+      : process.env.GRAPHQL_URI */ credentials:
+    "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
 

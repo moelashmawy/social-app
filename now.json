@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "builds": [{
+        "src": "server/index.ts",
+        "use": "@now/node-server"
+    }],
+    "routes": [{
+        "src": "./*",
+        "dest": "server/index.ts"
+    }],
+    "env": {
+        "DB_URI": "mongodb+srv://hamo246:0452504270@cluster0-7ckqn.azure.mongodb.net/local_library?retryWrites=true",
+        "JWT_SECRET": "iDontHaveAnySecrets",
+        "CLOUDINARY_CLOUD_NAME": "hamohuh",
+        "CLOUDINARY_API_KEY": "838736889631699",
+        "CLOUDINARY_API_SECRET": "4V8gR-toRb1FCVmfmD5nM-mGL5M"
+    }
+}

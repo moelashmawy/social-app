@@ -25,17 +25,6 @@ const server = new GraphQLServer({
 // database connection
 connectDb();
 
-server.use("/static", express.static(path.join(__dirname, "static")));
-
-if (process.env.NODE_ENV == "production") {
-  // set static folder
-  server.use(express.static(path.join(__dirname, "client", "build")));
-
-  server.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
-}
-
 // Server connection options
 const options = {
   port: process.env.PORT || 5000,
@@ -44,10 +33,10 @@ const options = {
   playground: "/graphql",
   cors: {
     credentials: true,
-    origin:
-      process.env.NODE_ENV === "development"
+    origin: ["http://localhost:3000"]
+    /* process.env.NODE_ENV === "development"
         ? ["http://localhost:3000"]
-        : ["https://social-app-morning.herokuapp.com"] // your frontend url.
+        : ["https://social-app-morning.herokuapp.com"] */ // your frontend url.
   }
 };
 
