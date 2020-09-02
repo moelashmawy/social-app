@@ -1,0 +1,41 @@
+/* Main header */
+.main-header {
+    .MuiToolbar-root {
+
+        /* header link */
+        a {
+            margin-left: 15px;
+            font-weight: 500;
+
+            &:hover {
+                color: #fff;
+                border-bottom: 1px solid #fff;
+                transition: all ease-in-out .3s
+            }
+        }
+
+        /* signed in account */
+        .me-header {
+            margin-left: auto;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+        }
+    }
+
+    /* Home button */
+    .MuiIconButton-label {
+        .MuiIconButton-root {
+            &:hover {
+                background-color: none;
+            }
+        }
+
+        /* home button a */
+        a {
+            margin-left: 0;
+        }
+    }
+}
