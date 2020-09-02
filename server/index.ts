@@ -30,8 +30,8 @@ const options = {
   subscriptions: "/subscriptions",
   playground: "/graphql",
   cors: {
-    credentials: true,
-    origin: ["http://localhost:3000"] // your frontend url.
+    credentials: true
+    //origin: ["http://localhost:3000"] // your frontend url.
   }
 };
 

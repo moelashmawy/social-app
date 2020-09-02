@@ -14,7 +14,7 @@ const isBrowser = typeof window !== "undefined";
 
 // http link
 const httpLink = createUploadLink({
-  uri: process.env.GRAPHQL_URI, // "http://localhost:5000/graphql", // Server URL (must be absolute)
+  uri: process.env.GRAPHQL_URI, //"http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
@@ -22,7 +22,7 @@ const httpLink = createUploadLink({
 // websocket link
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: `ws://localhost:5000/subscriptions`,
+      uri: `ws://social-app-morning.herokuapp.com/subscriptions`,
       options: { reconnect: true }
     })
   : null;
@@ -64,7 +64,7 @@ const authLink = setContext((_, { headers }) => {
 // create an apollo client
 function createApolloClient() {
   return new ApolloClient({
-    uri: "/graphql",
+    uri: process.env.GRAPHQL_URI, // "http://localhost:5000/graphql",
     ssrMode: !isBrowser,
     link: authLink.concat(splitLink as any),
     cache: new InMemoryCache()
