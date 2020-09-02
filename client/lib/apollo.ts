@@ -25,7 +25,7 @@ const httpLink = createUploadLink({
 // websocket link
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: `ws://social-app-morning.herokuapp.com/subscriptions`,
+      uri: `ws://localhost:5000/subscriptions`,
       options: { reconnect: true }
     })
   : null;

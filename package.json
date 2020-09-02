@@ -35,8 +35,8 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "NODE_ENV=production ts-node -r esm ./server/index.ts -p $PORT",
-    "server": "nodemon -r esm ./server/index.ts -p $PORT",
+    "start": "ts-node -r esm ./server/index.ts",
+    "server": "nodemon -r esm ./server/index.ts",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
