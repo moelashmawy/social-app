@@ -9,7 +9,17 @@ import { useEffect } from "react";
 import { ThemeProvider } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../styles/theme";
+import Router from "next/router";
+import NProgress from "nprogress"; //nprogress module
+import "nprogress/nprogress.css"; //styles of nprogress//Binding events.
 
+// handle show progress bar
+NProgress.configure({ showSpinner: false });
+Router.events.on("routeChangeStart", () => NProgress.start());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
+
+// custom _app component
 function MyApp(props: any) {
   const { Component, pageProps } = props;
 
