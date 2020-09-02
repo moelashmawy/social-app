@@ -5,7 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
-import { ALL_USER_CHATS_QUERY, GET_MESSAGES } from "../../graphql/queries";
+import { ALL_USER_CHATS_QUERY } from "../../graphql/queries";
 import {
   Avatar,
   Button,
@@ -17,6 +17,7 @@ import {
 import { SEND_MESSAGE_MUTATION } from "../../graphql/mutations";
 import Link from "next/link";
 import { initializeApollo } from "../../lib/apollo";
+import { SEND_MESSAGE_SUB } from "../../graphql/subscription";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -82,14 +83,47 @@ export default function index(props: any) {
     { data: sendMessageData, loading: sendMessageLoading }
   ] = useMutation(SEND_MESSAGE_MUTATION);
 
-  const { data } = useSubscription(GET_MESSAGES);
+  // handle send message subscription
+  const { data, loading, error } = useSubscription(SEND_MESSAGE_SUB);
 
-  if (data) {
-    console.log(data);
-  }
+  let chatSubscribe = data?.userChats.chat;
+
+  // render chat messages depends on the chat id
+  let msgs = chat => {
+    if (chat?.id === chatSubscribe?.id && chatSubscribe)
+      return chatSubscribe.messages.map((message, index) => (
+        <ListItem key={index}>
+          <ListItemAvatar>
+            <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
+              <a>
+                <Avatar src={message.user.avatarUrl} title={message.user.userName} />
+              </a>
+            </Link>
+          </ListItemAvatar>
+
+          <ListItemText primary={message.text} />
+        </ListItem>
+      ));
+    else {
+      return chat.messages.map((message, index) => (
+        <ListItem key={index}>
+          <ListItemAvatar>
+            <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
+              <a>
+                <Avatar src={message.user.avatarUrl} title={message.user.userName} />
+              </a>
+            </Link>
+          </ListItemAvatar>
+
+          <ListItemText primary={message.text} />
+        </ListItem>
+      ));
+    }
+  };
 
   return (
     <div className={classes.root}>
+      {loading && <div>loading....</div>}
       <Tabs
         orientation='vertical'
         variant='scrollable'
@@ -110,24 +144,7 @@ export default function index(props: any) {
       {userChats &&
         userChats.map((chat, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <List>
-              {chat.messages.map(message => (
-                <ListItem>
-                  <ListItemAvatar>
-                    <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
-                      <a>
-                        <Avatar
-                          src={message.user.avatarUrl}
-                          title={message.user.userName}
-                        />
-                      </a>
-                    </Link>
-                  </ListItemAvatar>
-
-                  <ListItemText primary={message.text} />
-                </ListItem>
-              ))}
-            </List>
+            <List>{msgs(chat)}</List>
 
             <textarea
               value={message}
