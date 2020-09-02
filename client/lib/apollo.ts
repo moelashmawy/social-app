@@ -12,12 +12,14 @@ let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
 let token: string;
 const isBrowser = typeof window !== "undefined";
 
+// http link
 const httpLink = createUploadLink({
   uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
 
+// websocket link
 const wsLink = process.browser
   ? new WebSocketLink({
       uri: `ws://localhost:5000/subscriptions`,
@@ -25,6 +27,7 @@ const wsLink = process.browser
     })
   : null;
 
+// splitLink decides which link to use
 const splitLink = process.browser
   ? split(
       ({ query }) => {
