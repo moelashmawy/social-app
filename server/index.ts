@@ -35,7 +35,7 @@ const options = {
     credentials: true,
     origin:
       process.env.NODE_ENV === "production"
-        ? ["yarab-yshtaghal.herokuapp.com"]
+        ? ["https://yarab-yshtaghal.herokuapp.com"]
         : ["http://localhost:3000"] // your frontend url.
   }
 };
