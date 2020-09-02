@@ -2,8 +2,10 @@ import { userAuth } from "../../middlewares/auth";
 import Chat from "../../models/Chat";
 import Message from "../../models/Message";
 
-const subscribers = [];
-const onMessageUpdate = fn => subscribers.push(fn);
+/* const subscribers = [];
+const onMessagesUpdates = fn => subscribers.push(fn); */
+
+const CHAT_CHANNEL = "CHAT_CHANNEL";
 
 const chatResolver = {
   Query: {
@@ -66,16 +68,18 @@ const chatResolver = {
     },
 
     // send message
-    sendMessage: async (parent: any, { text, user, chat }, { req, res }) => {
+    sendMessage: async (parent: any, { text, user, chat }, { req, res, pubsub }) => {
       try {
         // 1- authenticate user
-        userAuth(req);
+        await userAuth(req);
 
-        //const { userId } = req.user;
+        console.log(req.user);
+
+        const userId = req.user.userId;
 
         // 2- create new message
         const newMessage = new Message({ text: text, user: user, chat: chat });
-        await newMessage.save();
+        const mess = await newMessage.save();
 
         // 3- update the messages array with the new message id
         await Chat.findByIdAndUpdate(
@@ -84,7 +88,22 @@ const chatResolver = {
           { useFindAndModify: false }
         );
 
-        subscribers.forEach(fn => fn());
+        const currentChat = await Chat.findById(chat)
+          .populate({
+            path: "users",
+            model: "NewUser"
+          })
+          .populate({
+            path: "messages",
+            model: "Message",
+            populate: {
+              path: "user",
+              model: "NewUser"
+            }
+          })
+          .exec();
+
+        pubsub.publish(CHAT_CHANNEL, { userChats: { ok: true, chat: currentChat } });
 
         return {
           ok: true,
@@ -99,43 +118,12 @@ const chatResolver = {
     }
   },
 
-  /** Subscription */
+  /************** Subscription ***********/
   Subscription: {
-    userChats: async (parent, args, { pubsub, req, res }) => {
-      await userAuth(req);
-
-      const userId = req.user.userId;
-
-      const chats = await Chat.find({
-        users: {
-          $in: userId
-        }
-      })
-        .populate({
-          path: "users",
-          model: "NewUser"
-        })
-        .populate({
-          path: "messages",
-          model: "Message",
-          populate: {
-            path: "user",
-            model: "NewUser"
-          }
-        })
-        .exec();
-
-      const channel = Math.random().toString(36).substring(2, 15); // random channel name
-
-      onMessageUpdate(() => {
-        pubsub.publish(channel, { chats });
-      });
-
-      setTimeout(() => {
-        pubsub.publish(channel, { chats });
-      }, 0);
-
-      return pubsub.asyncIterator(channel);
+    userChats: {
+      subscribe: (parent, args, { req, res, pubsub }) => {
+        return pubsub.asyncIterator(CHAT_CHANNEL);
+      }
     }
   }
 };

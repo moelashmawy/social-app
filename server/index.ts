@@ -14,7 +14,7 @@ const server = new GraphQLServer({
     return {
       req: request,
       res: response,
-      token: request.headers.token,
+      token: request?.headers?.token, //request?.headers ? request.headers.token : null,
       pubsub
     };
   }

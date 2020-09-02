@@ -216,33 +216,3 @@ export const ALL_USER_CHATS_QUERY = gql`
     }
   }
 `;
-
-export const GET_MESSAGES = gql`
-  subscription {
-    userChats {
-      ok
-      error
-      chats {
-        id
-        users {
-          id
-          userName
-          firstName
-          lastName
-          avatarUrl
-        }
-        messages {
-          id
-          text
-          user {
-            id
-            userName
-            firstName
-            lastName
-            avatarUrl
-          }
-        }
-      }
-    }
-  }
-`;

@@ -1,30 +1,43 @@
 import { useMemo } from "react";
-import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, ApolloLink, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import Cookies from "js-cookie";
 import fetch from "isomorphic-unfetch";
 import { createUploadLink } from "apollo-upload-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
+import { RetryLink } from "apollo-link-retry";
+import { getMainDefinition } from "apollo-utilities";
 
 let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
 let token: string;
 const isBrowser = typeof window !== "undefined";
 
-/* const httpLink = new WebSocketLink({
-  uri: "http://localhost:5000/graphql",
-  options: {
-    reconnect: true
-  }
-}); */
-//const link = new RetryLi
 const httpLink = createUploadLink({
-  uri:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:5000/graphql"
-      : "https://protected-gorge-52048.herokuapp.com/", // Server URL (must be absolute)
+  uri: "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
 });
+
+const wsLink = process.browser
+  ? new WebSocketLink({
+      uri: `ws://localhost:5000/subscriptions`,
+      options: { reconnect: true }
+    })
+  : null;
+
+const splitLink = process.browser
+  ? split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === "OperationDefinition" &&
+          definition.operation === "subscription"
+        );
+      },
+      wsLink,
+      httpLink as any
+    )
+  : httpLink;
 
 // will user `setContext` to send the token with every request
 const authLink = setContext((_, { headers }) => {
@@ -50,7 +63,7 @@ function createApolloClient() {
   return new ApolloClient({
     uri: "http://localhost:5000/graphql",
     ssrMode: !isBrowser,
-    link: authLink.concat(httpLink as any),
+    link: authLink.concat(splitLink as any), //authLink.concat(splitLink /*  as any */),
     cache: new InMemoryCache()
   });
 }

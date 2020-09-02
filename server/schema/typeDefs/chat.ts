@@ -34,6 +34,12 @@ const chatTypeDef = `
     successMessage: String
   }
 
+  type SendMessageSubPayload{
+    ok: Boolean!
+    error: String
+    chat: Chat!
+  }
+
   extend type Query{
     userChats: UserChatsQueryPayload
   }
@@ -44,8 +50,8 @@ const chatTypeDef = `
     sendMessage(text: String!, user: ID!, chat: ID): MessagePayload!
   } 
 
-  extend type Subscription{
-    userChats: UserChatsQueryPayload
+  extend type Subscription {
+    userChats: SendMessageSubPayload
   }
   
 
