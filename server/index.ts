@@ -30,12 +30,15 @@ const options = {
   subscriptions: "/subscriptions",
   playground: "/graphql",
   cors: {
-    credentials: true
-    //origin: ["http://localhost:3000"] // your frontend url.
+    credentials: true,
+    origin:
+      process.env.NODE_ENV === "development"
+        ? ["http://localhost:3000"]
+        : ["https://social-app-morning.herokuapp.com"] // your frontend url.
   }
 };
 
 // starting the server on port 5000
 server.start(options, () => {
-  console.log("Server is running on http://localhost:5000");
+  console.log(`Server is running on http://localhost:${options.port}`);
 });
