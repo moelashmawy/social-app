@@ -38,7 +38,6 @@
     "start": "ts-node -r esm ./server/index.ts -p $PORT",
     "server": "nodemon -r esm ./server/index.ts",
     "client": "npm run dev --prefix client",
-    "build": "npm run build --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\" -p $PORT"
   },
   "author": "Mohamed Elashmawy",
