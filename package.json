@@ -38,8 +38,7 @@
     "start": "ts-node -r esm server/index.ts",
     "server": "nodemon -r esm server/index.ts",
     "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "tsc"
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Mohamed Elashmawy",
   "license": "MIT"
