@@ -1,0 +1,31 @@
+/* Main footer */
+.main-footer {
+    margin-bottom: 15px;
+
+
+    .MuiAppBar-root {
+        padding: 15px;
+    }
+
+    .lists-container {
+        color: #000;
+
+        .list-title {
+            border-bottom: 2px solid #000;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style: none;
+            margin-left: -40px;
+
+            li {
+                color: #222
+            }
+        }
+    }
+
+    .privacy-policy {
+        margin: 10px 0;
+    }
+}
