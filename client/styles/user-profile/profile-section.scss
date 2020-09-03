@@ -1,0 +1,38 @@
+/* each profile section */
+.profile-page {
+    .profile-section {
+        margin-bottom: 50px;
+
+        .profile-section-title {
+            border-bottom: 3px solid #556cd6;
+            width: 30%;
+        }
+
+        /* generate random colors for chips */
+        @for $i from 1 through 100 {
+            .chip-wrapper:nth-child(#{$i}) {
+                .MuiChip-outlined {
+                    border-color: rgb(random(255), random(255), random(255));
+                    color: #556cd6;
+                    margin-left: 10px;
+                    margin-bottom: 10px;
+                    border-width: 2px;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .contact-list {
+            i {
+                font-size: 25px;
+                color: #556cd6;
+            }
+
+            p {
+                font-weight: 600;
+                font-size: 1rem;
+            }
+        }
+
+    }
+}

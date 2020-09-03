@@ -43,6 +43,7 @@
     "react-dropzone": "^11.0.3",
     "react-redux": "^7.2.1",
     "react-swipeable-views": "^0.13.9",
+    "react-typed": "^1.2.0",
     "redux": "^4.0.5",
     "sass": "^1.26.10",
     "subscriptions-transport-ws": "^0.9.18",

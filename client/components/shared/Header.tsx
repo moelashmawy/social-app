@@ -2,31 +2,17 @@ import React from "react";
 import Link from "next/link";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { Home } from "@material-ui/icons";
-import { useMutation } from "@apollo/client";
-import { LOGOUT_MUTATION } from "../graphql/mutations";
-import { useRouter } from "next/router";
+
+import HeaderProfile from "./HeaderProfile";
 
 function Header(props) {
   // check whether the user is logged in or not
   const { me } = props;
 
-  const [logout, { data, loading, error }] = useMutation(LOGOUT_MUTATION, {
-    onError(error) {
-      //console.log(error);
-    }
-  });
-
-  // redirect to home page after logout
-  if (data?.logout.ok) {
-    useRouter().reload();
-  }
-
   return (
-    <div>
+    <div className='main-header'>
       <AppBar position='static'>
         <Toolbar>
           <IconButton edge='start' color='inherit' aria-label='menu'>
@@ -49,8 +35,6 @@ function Header(props) {
             </Link>
           )}
 
-          {me.ok && <a onClick={() => logout()}>Logout</a>}
-
           {me.ok && (
             <Link href='/users/[userName]' as={`/users/${me.user.userName}`}>
               <a>My Profile</a>
@@ -70,12 +54,6 @@ function Header(props) {
           )}
 
           {me.ok && (
-            <Link href='/wall'>
-              <a>Wall</a>
-            </Link>
-          )}
-
-          {me.ok && (
             <Link href='/photos/[userName]' as={`/photos/${me.user.userName}`}>
               <a>Photos</a>
             </Link>
@@ -88,9 +66,15 @@ function Header(props) {
           )}
 
           {me.ok && (
-            <Link href='/settings'>
+            <Link href='/profile/editProfile'>
               <a>Settings</a>
             </Link>
+          )}
+
+          {me.ok && (
+            <div className='me-header'>
+              <HeaderProfile me={me} />
+            </div>
           )}
         </Toolbar>
       </AppBar>

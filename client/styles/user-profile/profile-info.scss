@@ -1,0 +1,39 @@
+/* profile page info */
+.profile-page {
+    .profile-info {
+
+        /* each profile info */
+        .profile-info-item {
+            line-height: 2rem;
+
+            /* the title */
+            .title {
+                font-weight: 600;
+                font-size: 17px;
+                color: #666;
+            }
+
+            /* details */
+            .info {
+                color: #999;
+            }
+
+            /* languages details */
+            .lang-info {
+                margin-left: 5px;
+
+                &:last-child {
+                    &::after {
+                        content: unset;
+                        display: block;
+
+                    }
+                }
+
+                &::after {
+                    content: "/";
+                }
+            }
+        }
+    }
+}

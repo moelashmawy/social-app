@@ -1,4 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
 @import "./Home-page/home-page.scss";
+@import "./shared/index.scss";
+@import "./user-profile/index.scss";
+@import "./chat/index.scss";
+
+* {
+  font-family: 'Comfortaa', cursive;
+}
 
 a {
   text-decoration: none;

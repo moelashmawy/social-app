@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./shared/Header";
+import Footer from "./shared/Footer";
 
 // out pages layout
 const Layout = props => {
@@ -10,7 +10,6 @@ const Layout = props => {
 
   return (
     <div className='container'>
-      <div>Logoooooo</div>
       <Header me={props.me} />
       {props.children}
       <Footer />

@@ -1,0 +1,20 @@
+/* profile page add friend section */
+.profile-page {
+
+    .add-friend-section {
+        margin: 35px 0;
+
+        .MuiGrid-item {
+            cursor: pointer;
+            margin: 0 10px;
+            border: 1px solid #556cd6;
+            padding: 10px;
+            border-radius: 5px;
+
+            .fa {
+                margin-left: 5px;
+            }
+        }
+    }
+
+}

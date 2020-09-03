@@ -9,6 +9,7 @@ import { ALL_USER_CHATS_QUERY } from "../../graphql/queries";
 import {
   Avatar,
   Button,
+  Grid,
   List,
   ListItem,
   ListItemAvatar,
@@ -54,10 +55,10 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1,
+    //flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: 400
+    height: 550
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`
@@ -124,58 +125,74 @@ export default function index(props: any) {
 
   return (
     <div className={classes.root}>
-      <Tabs
-        orientation='vertical'
-        variant='scrollable'
-        value={value}
-        onChange={handleChange}
-        aria-label='Vertical tabs example'
-        className={classes.tabs}>
-        {userChats &&
-          userChats.map((chat, index) => (
-            <Tab
-              key={chat.id}
-              label={chat.users[0].firstName + ", " + chat.users[1].firstName}
-              {...a11yProps(index)}
-            />
-          ))}
-      </Tabs>
+      <Grid container className='all-chats'>
+        <Grid item className='all-tass'>
+          <Tabs
+            orientation='vertical'
+            variant='scrollable'
+            value={value}
+            onChange={handleChange}
+            aria-label='Vertical tabs example'
+            className={classes.tabs}>
+            {userChats &&
+              userChats.map((chat, index) => (
+                <Tab
+                  className='one-tap'
+                  key={chat.id}
+                  label={chat.users[0].firstName + ", " + chat.users[1].firstName}
+                  {...a11yProps(index)}
+                />
+              ))}
+          </Tabs>
+        </Grid>
 
-      {userChats &&
-        userChats.map((chat, index) => (
-          <TabPanel key={index} value={value} index={index}>
-            <List>{msgs(chat)}</List>
+        <Grid item className='all-tabPanels'>
+          {userChats &&
+            userChats.map((chat, index) => (
+              <TabPanel key={index} value={value} index={index}>
+                <List className='chat-list'>{msgs(chat)}</List>
 
-            <textarea
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              onKeyUp={e => {
-                if (e.keyCode === 13) {
-                  send_message({
-                    variables: { text: message, user: me?.id, chat: chat.id }
-                  });
-                  setMessage("");
-                }
-              }}
-            />
+                <textarea
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  onKeyUp={e => {
+                    if (e.keyCode === 13) {
+                      send_message({
+                        variables: { text: message, user: me?.id, chat: chat.id }
+                      });
+                      setMessage("");
+                    }
+                  }}
+                />
 
-            <Button
-              onClick={() => {
-                send_message({
-                  variables: { text: message, user: me?.id, chat: chat.id }
-                });
-                setMessage("");
-              }}>
-              Send
-            </Button>
-          </TabPanel>
-        ))}
+                <Button
+                  onClick={() => {
+                    send_message({
+                      variables: { text: message, user: me?.id, chat: chat.id }
+                    });
+                    setMessage("");
+                  }}>
+                  Send
+                </Button>
+              </TabPanel>
+            ))}
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
 // Fetch necessary data for the blog post using params.id
 export async function getServerSideProps(ctx) {
+  //redirect if there is no authentcated user
+  if (!ctx.req.headers.cookie) {
+    ctx.res.writeHead(302, {
+      // or 301
+      Location: "/"
+    });
+    ctx.res.end();
+  }
+
   const apolloClient = initializeApollo();
 
   // get the cookies from the headers in the request object

@@ -9,9 +9,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  Button
 } from "@material-ui/core";
-import Link from "next/link";
 import PhotosSlider from "../../components/user-profile/PhotosSlider";
 import { useMutation } from "@apollo/client";
 import {
@@ -20,6 +20,7 @@ import {
   CREATE_NEW_CHAT_MUTATION
 } from "../../graphql/mutations";
 import ErrorMessage from "../../components/ToastMessage";
+import Typed from "react-typed";
 
 /**
  * This page will render the user's profile
@@ -56,7 +57,6 @@ function User(props) {
       {userQuery.error && <ErrorMessage message={userQuery.error} case='error' />}
 
       {error && <ErrorMessage message={error} case='error' />}
-      {error && <div>{error}</div>}
 
       {data?.addFriend.ok && (
         <ErrorMessage message={data.addFriend.successMessage} case='success' />
@@ -85,42 +85,67 @@ function User(props) {
             <link rel='icon' href='/favicon.ico' />
           </Head>
 
-          <Grid container>
+          <Grid container className='profile-page'>
             <Grid item xs={8}>
               {/*********** Welcome message ***************/}
               {myProfile?.userName == user?.userName && (
-                <Grid
-                  container
-                  direction='row'
-                  justify='space-between'
-                  alignItems='center'>
-                  <Grid>Hi {user.userName}, Have a good day.</Grid>
-                  <Grid>
-                    <Link href='/profile/editProfile'>
-                      <a>Edit Profile</a>
-                    </Link>
-                  </Grid>
-                </Grid>
+                <div className='welcome-message'>
+                  <Typed
+                    strings={[
+                      `Hi ${user.firstName}!`,
+                      "Start Making new friends",
+                      "Have a good day <3"
+                    ]}
+                    typeSpeed={80}
+                    loop
+                  />
+                </div>
               )}
 
               {/************************ Profile details ********************/}
-              <Grid container>
+              <Grid container className='profile-details'>
                 {/* Profile images */}
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {user.pictures.length < 1 ? (
-                    <Avatar alt='profile image' src={user.avatarUrl} />
+                    <Avatar
+                      className='profile-main-avatar'
+                      alt='profile image'
+                      src={user.avatarUrl}
+                    />
                   ) : (
-                    user.pictures.map((pic, index) => (
+                    <>
+                      {/* profile main pic */}
                       <Avatar
+                        className='profile-main-pic'
+                        src={user.avatarUrl}
                         onClick={handleClick}
-                        key={index}
                         variant='rounded'
-                        src={pic}
                       />
-                    ))
+                      {/* profile rest of the pics */}
+                      <Grid
+                        className='profile-pics'
+                        container
+                        direction='row'
+                        justify='space-evenly'>
+                        {user.pictures.map((pic, index) => {
+                          if (pic !== user.avatarUrl)
+                            return (
+                              <Grid xs={3} md={3} item>
+                                <Avatar
+                                  onClick={handleClick}
+                                  key={index}
+                                  variant='rounded'
+                                  src={pic}
+                                />
+                              </Grid>
+                            );
+                        })}
+                      </Grid>
+                    </>
                   )}
                 </Grid>
 
+                {/* Photos slider component */}
                 <PhotosSlider
                   photos={user.pictures}
                   handleOpen={handleOpen}
@@ -128,111 +153,193 @@ function User(props) {
                 />
 
                 {/* profile details */}
-                <Grid xs={8}>
-                  <div>country: {user.country}</div>
-                  <div>status: {user.status}</div>
+                <Grid xs={8} className='profile-info'>
+                  <div className='profile-info-item'>
+                    <span className='title'>Country : </span>
+                    <span className='info'>{user.country}</span>
+                  </div>
+
+                  <div className='profile-info-item'>
+                    <span className='title'>Status : </span>
+                    <span className='info'>{user.status}</span>
+                  </div>
+
                   {user.speakLanguages.length > 0 && (
-                    <div>
-                      Speaks:{" "}
+                    <div className='profile-info-item'>
+                      <span className='title'>Speaks : </span>
                       {user.speakLanguages.map(lang => (
-                        <span>{lang} | </span>
+                        <span className='lang-info info'>{lang}</span>
                       ))}
                     </div>
                   )}
-                  {user.learnLanguages.length > 0 && (
-                    <div>
-                      Speaks:{" "}
+
+                  {user.speakLanguages.length > 0 && (
+                    <div className='profile-info-item'>
+                      <span className='title'>Learning : </span>
                       {user.learnLanguages.map(lang => (
-                        <span>{lang} | </span>
+                        <span className='lang-info info'>{lang}</span>
                       ))}
                     </div>
                   )}
-                  <div>Education: {user.education}</div>
-                  <div>Relationship status: {user.relationship}</div>
+
+                  {user.education && (
+                    <div className='profile-info-item'>
+                      <span className='title'>Education : </span>
+                      <span className='info'>{user.education}</span>
+                    </div>
+                  )}
+
+                  {user.relationship && (
+                    <div className='profile-info-item'>
+                      <span className='title'>Relationship status : </span>
+                      <span className='info'>{user.relationship}</span>
+                    </div>
+                  )}
                 </Grid>
               </Grid>
 
               {/*  Message - Bookmark - Add Friend - Comments - Block - Report */}
               {myProfile?.userName != user?.userName && (
-                <div>
-                  <span
+                <Grid
+                  container
+                  className='add-friend-section'
+                  direction='row'
+                  justify='center'
+                  alignItems='flex-start'>
+                  {/* send message */}
+                  <Grid
+                    item
                     onClick={() => {
                       create_new_chat({
                         variables: { users: [user.id, myProfile.id] }
                       });
                     }}>
                     Message
-                  </span>
-                  <span
-                    onClick={() => {
-                      add_bookmark({ variables: { id: user.id } });
-                    }}>
-                    Bookmark
-                  </span>
-                  <span
+                    <i className='fa fa-comments' aria-hidden='true'></i>
+                  </Grid>
+
+                  {/* Add friend */}
+                  <Grid
+                    item
                     onClick={() => {
                       add_friend({ variables: { id: user.id } });
                     }}>
                     Add Friend
-                  </span>
-                  <span>Comments</span>
-                </div>
+                    <i className='fa fa-user-plus' aria-hidden='true'></i>
+                  </Grid>
+
+                  {/* add bookmark */}
+                  <Grid
+                    item
+                    onClick={() => {
+                      add_bookmark({ variables: { id: user.id } });
+                    }}>
+                    Bookmark
+                    <i className='fa fa-bookmark' aria-hidden='true'></i>
+                  </Grid>
+                </Grid>
               )}
 
               {/************************ About me ********************/}
               {user.aboutMe && (
-                <Grid>
-                  <h3>About me</h3>
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>About me</h3>
                   <p>{user.aboutMe}</p>
                 </Grid>
               )}
 
+              {/************************ hobbies ********************/}
               {user.hobbies.length > 0 && (
-                <Grid>
-                  <h3>Hobbies & Interests </h3>
-                  {user.hobbies.map(hobby => (
-                    <Chip label={hobby} color='primary' variant='outlined' />
-                  ))}
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Hobbies & Interests </h3>
+                  <Grid
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='center'>
+                    {user.hobbies.map(hobby => (
+                      <Grid item className='chip-wrapper'>
+                        <Chip label={hobby} color='primary' variant='outlined' />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
               )}
 
               {/************************ music ********************/}
               {user.music.length > 0 && (
-                <Grid>
-                  <h3>Favorite Music</h3>
-                  {user.music.map(music => (
-                    <Chip label={music} color='primary' variant='outlined' />
-                  ))}
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Favorite Music</h3>
+                  <Grid
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='center'>
+                    {user.music.map(music => (
+                      <Grid item className='chip-wrapper'>
+                        <Chip label={music} color='primary' variant='outlined' />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
               )}
 
               {/************************ movies ********************/}
               {user.movies.length > 0 && (
-                <Grid>
-                  <h3>Favorite Movies</h3>
-                  {user.movies.map(movie => (
-                    <Chip label={movie} color='primary' variant='outlined' />
-                  ))}
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Favorite Movies</h3>
+                  <Grid
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='center'>
+                    {user.movies.map(movie => (
+                      <Grid item className='chip-wrapper'>
+                        <Chip label={movie} variant='outlined' />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
               )}
 
               {/************************ tv shows ********************/}
               {user.tvShows.length > 0 && (
-                <Grid>
-                  <h3>Favorite TV Shows</h3>
-                  {user.tvShows.map(tvShow => (
-                    <Chip label={tvShow} color='primary' variant='outlined' />
-                  ))}
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Favorite TV Shows</h3>
+                  <Grid
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='center'>
+                    {user.tvShows.map(tvShow => (
+                      <Grid item className='chip-wrapper'>
+                        <Chip
+                          className='wrap-love-item'
+                          label={tvShow}
+                          color='primary'
+                          variant='outlined'
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
               )}
 
               {/************************ Books ********************/}
               {user.books.length > 0 && (
-                <Grid>
-                  <h3>Favorite Books</h3>
-                  {user.books.map(book => (
-                    <Chip label={book} color='primary' variant='outlined' />
-                  ))}
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Favorite Books</h3>
+                  <Grid
+                    container
+                    direction='row'
+                    justify='space-evenly'
+                    alignItems='center'>
+                    {user.books.map(book => (
+                      <Grid item className='chip-wrapper'>
+                        <Chip label={book} color='primary' variant='outlined' />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
               )}
 
@@ -242,9 +349,9 @@ function User(props) {
                 user.contactInfo.instagram ||
                 user.contactInfo.snapchat ||
                 (user.contactInfo.website && user.contactInfo)) && (
-                <Grid>
-                  <h3>Contact me</h3>
-                  <List>
+                <Grid className='profile-section'>
+                  <h3 className='profile-section-title'>Contact me</h3>
+                  <List className='contact-list'>
                     {user.contactInfo.skype && (
                       <ListItem>
                         <ListItemIcon>
@@ -306,10 +413,16 @@ function User(props) {
 
 // Fetch necessary data for the blog post using params.id
 export async function getServerSideProps(ctx) {
-  const apolloClient = initializeApollo();
+  // redirect to home page if there is no user
+  if (!ctx.req.headers.cookie) {
+    ctx.res.writeHead(302, {
+      // or 301
+      Location: "/"
+    });
+    ctx.res.end();
+  }
 
-  // get the cookies from the headers in the request object
-  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
+  const apolloClient = initializeApollo();
 
   let oneUserQuery = await apolloClient.query({
     query: ONE_USER_QUERY,

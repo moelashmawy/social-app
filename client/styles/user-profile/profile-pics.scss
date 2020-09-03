@@ -1,0 +1,38 @@
+/* Profile Page -> profile pics*/
+.profile-page {
+
+    /* profile details */
+    .profile-details {
+        margin: 20px 0;
+    }
+
+    .welcome-message {
+        font-size: 18px;
+        color: #687cd3;
+    }
+
+    /* the avatar styles before the user updats a pic */
+    .profile-main-avatar {
+        width: 13rem;
+        height: 13rem;
+        cursor: pointer;
+    }
+
+    .profile-main-pic {
+        width: 90% !important;
+        height: 12rem;
+        margin-bottom: 5px;
+        cursor: pointer;
+    }
+
+    /* rest of the pics */
+    .profile-pics {
+        width: 90%;
+        cursor: pointer;
+
+        .MuiAvatar-root {
+            width: 80%;
+            height: 90%;
+        }
+    }
+}

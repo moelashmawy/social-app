@@ -1,5 +1,7 @@
 /* Main header */
 .main-header {
+    padding-top: 20px;
+
     .MuiToolbar-root {
 
         /* header link */
@@ -26,11 +28,9 @@
     }
 
     /* Home button */
-    .MuiIconButton-label {
-        .MuiIconButton-root {
-            &:hover {
-                background-color: none;
-            }
+    .MuiButtonBase-root {
+        &:hover {
+            background-color: unset !important;
         }
 
         /* home button a */

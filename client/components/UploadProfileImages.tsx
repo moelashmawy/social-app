@@ -19,16 +19,11 @@ export default function UploadProfileImages() {
 
   return (
     <>
-      {loading && <div>Loading....</div>}
       {data?.uploadProfilePictures.ok && (
         <ErrorMessage
           message={data.uploadProfilePictures.successMessage}
           case='success'
         />
-      )}
-
-      {data?.uploadProfilePictures.ok && (
-        <ErrorMessage message={data.uploadProfilePictures.successMessage} case='error' />
       )}
 
       <Formik
@@ -54,14 +49,16 @@ export default function UploadProfileImages() {
               setImgs(e.target.files);
             }}
           />
-          <button
-            type='submit'
-            onClick={() => {
-              upload({ variables: { file: imgs } });
-              router.push("/");
-            }}>
-            Upload
-          </button>
+          {loading && <button>Uploading...</button>}
+          {!loading && (
+            <button
+              type='submit'
+              onClick={() => {
+                upload({ variables: { file: imgs } });
+              }}>
+              Upload
+            </button>
+          )}
         </Form>
       </Formik>
     </>
