@@ -15,7 +15,7 @@ const isBrowser = typeof window !== "undefined";
 const httpLink = createUploadLink({
   uri:
     process.env.NODE_ENV == "production"
-      ? `${process.env.HEROKU_URL}graphql`
+      ? `${process.env.HEROKU_URL}/graphql`
       : "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
