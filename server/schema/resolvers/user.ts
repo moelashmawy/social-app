@@ -47,7 +47,7 @@ const processUpload = async (upload: any) => {
 const userResolver = {
   Query: {
     // current user query
-    me: async (_, __, { req, res }) => {
+    me: async (_: any, __: any, { req }) => {
       try {
         await userAuth(req);
 
@@ -77,7 +77,7 @@ const userResolver = {
     },
 
     // all users query
-    users: async (parent: any, { id }, { req, res }) => {
+    users: async (_: any, __: any, { req }) => {
       try {
         await userAuth(req);
 
@@ -105,9 +105,9 @@ const userResolver = {
     },
 
     // one user query
-    userInfo: async (parent: any, { userName }, { req, res }) => {
+    userInfo: async (_: any, { userName }, { req }) => {
       try {
-        //await userAuth(req);
+        await userAuth(req);
 
         let user = await User.findOne({ userName: userName })
           .populate({
@@ -133,7 +133,7 @@ const userResolver = {
     },
 
     // fetch friends requests
-    friendRequests: async (parent: any, args, { req, res }) => {
+    friendRequests: async (_: any, args: any, { req }) => {
       try {
         await userAuth(req);
 
@@ -174,7 +174,7 @@ const userResolver = {
 
   Mutation: {
     //signup mutation
-    signUp: async (_, args: any, context: any) => {
+    signUp: async (_: any, args: any, context: any) => {
       try {
         // 1- validate input data
         await signupvalidatation.validate(args);
@@ -223,7 +223,7 @@ const userResolver = {
     //******************************************
     //*********** login mutation ***************
     //******************************************
-    login: async (_parent: any, args: any, context: any) => {
+    login: async (_: any, args: any, context: any) => {
       try {
         //1- validate input data
         await loginValidatation.validate(args);
@@ -266,7 +266,7 @@ const userResolver = {
       }
     },
     //logout Mutation
-    logout: async (_, __, { req, res }) => {
+    logout: async (_: any, __: any, { res }) => {
       res.clearCookie("token", {
         domain: "localhost",
         path: "/"
@@ -277,7 +277,7 @@ const userResolver = {
       };
     },
     // Delete user mutation
-    deleteUser: async (_, args, { req, res }) => {
+    deleteUser: async (_: any, args: any, { req }) => {
       try {
         // 1- authenticate user
         await adminAuth(req);
@@ -298,7 +298,7 @@ const userResolver = {
       }
     },
     // Delete user mutation
-    uploadProfilePictures: async (_, { file }, { req, res }) => {
+    uploadProfilePictures: async (_: any, { file }: any, { req }) => {
       try {
         // 1- Authenticate user
         await userAuth(req);
@@ -328,7 +328,7 @@ const userResolver = {
       }
     },
     // delete profile picture
-    deleteProfilePicture: async (_, { name }, { req, res }) => {
+    deleteProfilePicture: async (_: any, { name }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -355,7 +355,7 @@ const userResolver = {
     },
 
     // choose profile picture
-    chooseProfilePicture: async (_, { name }, { req, res }) => {
+    chooseProfilePicture: async (_: any, { name }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -381,7 +381,7 @@ const userResolver = {
       }
     },
     // update User info
-    updateProfileInfo: async (_, args, { req, res }) => {
+    updateProfileInfo: async (_: any, args: any, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -410,7 +410,7 @@ const userResolver = {
       }
     },
     // add friend
-    addFriend: async (_, { id }, { req, res }) => {
+    addFriend: async (_: any, { id }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -419,7 +419,7 @@ const userResolver = {
 
         //2- check if the 2 accounts are already friends
         const user = await User.findOne({ _id: myId }).exec();
-        if (user.friends.includes(id)) {
+        if (user?.friends.includes(id)) {
           throw new GraphQLError("You're already friends");
         }
 
@@ -443,7 +443,7 @@ const userResolver = {
       }
     },
     // accept friend request
-    acceptFriend: async (_, { id }, { req, res }) => {
+    acceptFriend: async (_: any, { id }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -471,7 +471,7 @@ const userResolver = {
       }
     },
     // delete friend
-    deleteFriend: async (_, { id }, { req, res }) => {
+    deleteFriend: async (_: any, { id }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -496,7 +496,7 @@ const userResolver = {
       }
     },
     // add bookmark
-    addBookmark: async (_, { id }, { req, res }) => {
+    addBookmark: async (_: any, { id }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
@@ -505,7 +505,7 @@ const userResolver = {
 
         // 2- check if the user already in bookmarks
         const user = await User.findOne({ _id: myId }).exec();
-        if (user.bookmarks.includes(id)) {
+        if (user?.bookmarks.includes(id)) {
           throw new GraphQLError("Already in your bookmarks");
         }
 
@@ -530,7 +530,7 @@ const userResolver = {
       }
     },
     // delete bookmark
-    deleteBookmark: async (_, { id }, { req, res }) => {
+    deleteBookmark: async (_: any, { id }, { req }) => {
       try {
         // 1- authenticate user
         await userAuth(req);
