@@ -17,6 +17,7 @@ export const SEND_MESSAGE_SUB = gql`
         messages {
           id
           text
+          createdAt
           user {
             id
             userName
