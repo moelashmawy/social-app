@@ -13,10 +13,16 @@ const server = new GraphQLServer({
   typeDefs,
   resolvers,
   context: ({ request, response }) => {
+    let token: any;
+    if (request.headers) {
+      token = request.headers.token;
+    } else {
+      token = null;
+    }
     return {
       req: request,
       res: response,
-      token: request?.headers?.token, //request?.headers ? request.headers.token : null,
+      token: token, //request?.headers?.token, //request?.headers ? request.headers.token : null,
       pubsub
     };
   }
