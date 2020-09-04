@@ -1,3 +1,5 @@
+@import "./../utilities/variables.scss";
+
 /* profile page add friend section */
 .profile-page {
 
@@ -7,7 +9,7 @@
         .MuiGrid-item {
             cursor: pointer;
             margin: 0 10px;
-            border: 1px solid #556cd6;
+            border: 1px solid $main-color;
             padding: 10px;
             border-radius: 5px;
 

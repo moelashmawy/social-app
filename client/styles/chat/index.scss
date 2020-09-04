@@ -1,10 +1,52 @@
-.all-tabPanels {
-    width: 80%;
-}
+@import "../utilities/variables.scss";
 
-.chat-list {
-    overflow-y: scroll;
-    height: 400px;
-    width: 100%;
-    margin-bottom: 15px;
+.all-chats {
+    margin-top: 5px;
+
+    .chat-list {
+        overflow-y: scroll;
+        //scrollbar-width: none;
+        height: 400px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .MuiBox-root {
+        padding: 0 24px;
+    }
+
+    .my-message {
+        background-color: #d6556c;
+        padding: 15px;
+        border-radius: 15px;
+        width: 80%;
+
+    }
+
+    .other-message {
+        background-color: #55add6;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+
+    textarea {
+        width: 100%;
+        border-radius: 25px;
+        border: 1px solid $main-color;
+        padding-left: 20px;
+        height: 55px;
+        line-height: 50px;
+    }
+
+    button {
+        border-radius: 50%;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        margin-left: 2rem;
+    }
+
+
+
+
 }

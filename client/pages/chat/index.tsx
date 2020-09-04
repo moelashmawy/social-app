@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -10,16 +10,18 @@ import {
   Avatar,
   Button,
   Grid,
+  Icon,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText
+  ListItemText,
+  Tooltip
 } from "@material-ui/core";
 import { SEND_MESSAGE_MUTATION } from "../../graphql/mutations";
 import Link from "next/link";
 import { initializeApollo } from "../../lib/apollo";
 import { SEND_MESSAGE_SUB } from "../../graphql/subscription";
-import ErrorMessage from "../../components/ToastMessage";
+import moment from "moment";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,6 +29,7 @@ interface TabPanelProps {
   value: any;
 }
 
+/* tab panel component used in material ui */
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -46,6 +49,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+/* used within material ui tab panel */
 function a11yProps(index: any) {
   return {
     id: `vertical-tab-${index}`,
@@ -53,9 +57,10 @@ function a11yProps(index: any) {
   };
 }
 
+/* used within material ui tab panel */
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    //flexGrow: 1,
+    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     height: 550
@@ -65,68 +70,109 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-// all chats
+/* all tab panesl chat (the whole chat page component) */
 export default function index(props: any) {
+  // the current logged in user
   let me = props.data.me.user;
+
+  // get all the cuser chats from `getServerSideProps()` to render
+  //if the user opens chat page
   let userChats = props.userChats.chats;
 
+  // handle the current chat messages
+  const [message, setMessage] = useState("");
+
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  const [message, setMessage] = React.useState("");
-
+  // handle material ui tab panel change
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
   // handle send message mutation
+  // once it's hit, it calls the new message subscription on the backend
   const [
     send_message,
     { data: sendMessageData, loading: sendMessageLoading }
   ] = useMutation(SEND_MESSAGE_MUTATION);
 
   // handle send message subscription
+  // it returns the current active chat
   const { data, loading, error } = useSubscription(SEND_MESSAGE_SUB);
-
+  // the chat returned from the subscription
   let chatSubscribe = data?.userChats.chat;
 
-  // render chat messages depends on the chat id
+  /* once the user hits send button the subscription return the current chat
+   but the chat list keeps at the same position, but we need to scroll down 
+   at the very last message, so we need a functionality to scroll down to the 
+   bottom of the chat list */
+  const AlwaysScrollToBottom: any = () => {
+    useEffect(() => {
+      var list: any = document.getElementById("chat-list");
+      list.scrollTop = list.scrollHeight;
+    });
+  };
+  AlwaysScrollToBottom();
+
+  /* once the user hits send button, the subscription returns the current active chat
+  so only need to re render only the new chat with the new message, not all the chats 
+  */
+  // it takes chat parameter to decide which chat to render
   let msgs = chat => {
     if (chat?.id === chatSubscribe?.id && chatSubscribe)
       return chatSubscribe.messages.map((message, index) => (
         <ListItem key={index}>
-          <ListItemAvatar>
-            <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
-              <a>
-                <Avatar src={message.user.avatarUrl} title={message.user.userName} />
-              </a>
-            </Link>
-          </ListItemAvatar>
+          <Tooltip title={moment(message.createdAt, "x").calendar()}>
+            <ListItemAvatar>
+              <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
+                <a>
+                  <Avatar src={message.user.avatarUrl} />
+                </a>
+              </Link>
+            </ListItemAvatar>
+          </Tooltip>
+          {message.user.userName === me.userName && (
+            <ListItemText className='my-message' primary={message.text} />
+          )}
 
-          <ListItemText primary={message.text} />
+          {message.user.userName !== me.userName && (
+            <ListItemText className='other-message' primary={message.text} />
+          )}
         </ListItem>
       ));
     else {
       return chat.messages.map((message, index) => (
         <ListItem key={index}>
-          <ListItemAvatar>
-            <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
-              <a>
-                <Avatar src={message.user.avatarUrl} title={message.user.userName} />
-              </a>
-            </Link>
-          </ListItemAvatar>
+          <Tooltip title={moment(message.createdAt, "x").calendar()}>
+            <ListItemAvatar>
+              <Link href='/users/[userName]' as={`/users/${message.user.userName}`}>
+                <a>
+                  <Avatar src={message.user.avatarUrl} />
+                </a>
+              </Link>
+            </ListItemAvatar>
+          </Tooltip>
 
-          <ListItemText primary={message.text} />
+          {message.user.userName === me.userName && (
+            <ListItemText className='my-message' primary={message.text} />
+          )}
+
+          {message.user.userName !== me.userName && (
+            <ListItemText className='other-message' primary={message.text} />
+          )}
         </ListItem>
       ));
     }
   };
 
+  // retuens the whole tab panel with all the chats
   return (
     <div className={classes.root}>
+      {/* all chats container */}
       <Grid container className='all-chats'>
-        <Grid item className='all-tass'>
+        {/* all user chat tabs */}
+        <Grid xs={12} md={3} item className='all-tabs'>
           <Tabs
             orientation='vertical'
             variant='scrollable'
@@ -146,34 +192,45 @@ export default function index(props: any) {
           </Tabs>
         </Grid>
 
-        <Grid item className='all-tabPanels'>
+        {/* the chosen tab panel from the above tab */}
+        <Grid xs={12} md={9} item className='one-tabPanels'>
           {userChats &&
             userChats.map((chat, index) => (
               <TabPanel key={index} value={value} index={index}>
-                <List className='chat-list'>{msgs(chat)}</List>
+                <List id='chat-list' className='chat-list'>
+                  {msgs(chat)}
+                </List>
 
-                <textarea
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  onKeyUp={e => {
-                    if (e.keyCode === 13) {
-                      send_message({
-                        variables: { text: message, user: me?.id, chat: chat.id }
-                      });
-                      setMessage("");
-                    }
-                  }}
-                />
+                <Grid container>
+                  <Grid item xs={10}>
+                    <textarea
+                      value={message}
+                      onChange={e => setMessage(e.target.value)}
+                      onKeyUp={e => {
+                        if (e.keyCode === 13) {
+                          send_message({
+                            variables: { text: message, user: me?.id, chat: chat.id }
+                          });
+                          setMessage("");
+                        }
+                      }}
+                    />
+                  </Grid>
 
-                <Button
-                  onClick={() => {
-                    send_message({
-                      variables: { text: message, user: me?.id, chat: chat.id }
-                    });
-                    setMessage("");
-                  }}>
-                  Send
-                </Button>
+                  <Grid item xs={2}>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => {
+                        send_message({
+                          variables: { text: message, user: me?.id, chat: chat.id }
+                        });
+                        setMessage("");
+                      }}>
+                      <i className='fa fa-send'></i>
+                    </Button>
+                  </Grid>
+                </Grid>
               </TabPanel>
             ))}
         </Grid>
