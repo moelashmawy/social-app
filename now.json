@@ -1,7 +1,6 @@
 {
     "version": 2,
     "name": "social-app",
-    "alias": "social-app.sh",
     "builds": [{
             "src": "index.ts",
             "use": "@now/node-server"
