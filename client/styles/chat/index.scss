@@ -1,52 +1,54 @@
 @import "../utilities/variables.scss";
 
 .all-chats {
-    margin-top: 5px;
+  margin-top: 20px;
 
-    .chat-list {
-        overflow-y: scroll;
-        //scrollbar-width: none;
-        height: 400px;
-        width: 100%;
-        margin-bottom: 15px;
-    }
+  .chat-list {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: 400px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
 
-    .MuiBox-root {
-        padding: 0 24px;
-    }
+  .MuiBox-root {
+    padding: 0 24px;
+  }
 
-    .my-message {
-        background-color: #d6556c;
-        padding: 15px;
-        border-radius: 15px;
-        width: 80%;
+  .my-message,
+  .other-message {
+    background-color: #d6556c;
+    padding: 15px;
+    border-radius: 15px;
+    width: auto;
+    flex: none;
+    max-width: 50%;
+  }
 
-    }
+  .other-message {
+    background-color: #55add6;
+  }
 
-    .other-message {
-        background-color: #55add6;
-        padding: 15px;
-        border-radius: 15px;
-    }
-
+  .send-form {
+    padding-left: 75px;
 
     textarea {
-        width: 100%;
-        border-radius: 25px;
-        border: 1px solid $main-color;
-        padding-left: 20px;
-        height: 55px;
-        line-height: 50px;
+      width: 100%;
+      border-radius: 25px;
+      border: 1px solid $main-color;
+      padding-left: 20px;
+      height: 55px;
+      line-height: 50px;
     }
 
     button {
-        border-radius: 50%;
-        min-width: 50px !important;
-        min-height: 50px !important;
-        margin-left: 2rem;
+      border-radius: 50%;
+      min-width: 50px !important;
+      min-height: 50px !important;
+
+      @media (min-width: 768px) {
+        margin-left: 3rem;
+      }
     }
-
-
-
-
+  }
 }
