@@ -22,6 +22,7 @@ import Link from "next/link";
 import { initializeApollo } from "../../lib/apollo";
 import { SEND_MESSAGE_SUB } from "../../graphql/subscription";
 import moment from "moment";
+import Head from "next/head";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: 550
+    "min-height": 550
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`
@@ -122,6 +123,7 @@ export default function index(props: any) {
   let msgs = chat => {
     if (chat?.id === chatSubscribe?.id && chatSubscribe)
       return chatSubscribe.messages.map((message, index) => (
+        /* single chat message */
         <ListItem key={index}>
           <Tooltip title={moment(message.createdAt, "x").calendar()}>
             <ListItemAvatar>
@@ -143,6 +145,7 @@ export default function index(props: any) {
       ));
     else {
       return chat.messages.map((message, index) => (
+        /* single chat message */
         <ListItem key={index}>
           <Tooltip title={moment(message.createdAt, "x").calendar()}>
             <ListItemAvatar>
@@ -168,74 +171,81 @@ export default function index(props: any) {
 
   // retuens the whole tab panel with all the chats
   return (
-    <div className={classes.root}>
-      {/* all chats container */}
-      <Grid container className='all-chats'>
-        {/* all user chat tabs */}
-        <Grid xs={12} md={3} item className='all-tabs'>
-          <Tabs
-            orientation='vertical'
-            variant='scrollable'
-            value={value}
-            onChange={handleChange}
-            aria-label='Vertical tabs example'
-            className={classes.tabs}>
+    <>
+      <Head>
+        <title>Chat</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+
+      <div className={classes.root}>
+        {/* all chats container */}
+        <Grid container className='all-chats'>
+          {/* all user chat tabs */}
+          <Grid xs={12} md={3} item className='all-tabs'>
+            <Tabs
+              orientation='vertical'
+              variant='scrollable'
+              value={value}
+              onChange={handleChange}
+              aria-label='Vertical tabs example'
+              className={classes.tabs}>
+              {userChats &&
+                userChats.map((chat, index) => (
+                  <Tab
+                    className='one-tap'
+                    key={chat.id}
+                    label={chat.users[0].firstName + ", " + chat.users[1].firstName}
+                    {...a11yProps(index)}
+                  />
+                ))}
+            </Tabs>
+          </Grid>
+
+          {/* the chosen tab panel from the above tab */}
+          <Grid xs={12} md={9} item className='one-tabPanels'>
             {userChats &&
               userChats.map((chat, index) => (
-                <Tab
-                  className='one-tap'
-                  key={chat.id}
-                  label={chat.users[0].firstName + ", " + chat.users[1].firstName}
-                  {...a11yProps(index)}
-                />
-              ))}
-          </Tabs>
-        </Grid>
+                <TabPanel key={index} value={value} index={index}>
+                  <List id='chat-list' className='chat-list'>
+                    {msgs(chat)}
+                  </List>
 
-        {/* the chosen tab panel from the above tab */}
-        <Grid xs={12} md={9} item className='one-tabPanels'>
-          {userChats &&
-            userChats.map((chat, index) => (
-              <TabPanel key={index} value={value} index={index}>
-                <List id='chat-list' className='chat-list'>
-                  {msgs(chat)}
-                </List>
+                  <Grid container className='send-form'>
+                    <Grid item xs={10}>
+                      <textarea
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        onKeyUp={e => {
+                          if (e.keyCode === 13) {
+                            send_message({
+                              variables: { text: message, user: me?.id, chat: chat.id }
+                            });
+                            setMessage("");
+                          }
+                        }}
+                      />
+                    </Grid>
 
-                <Grid container>
-                  <Grid item xs={10}>
-                    <textarea
-                      value={message}
-                      onChange={e => setMessage(e.target.value)}
-                      onKeyUp={e => {
-                        if (e.keyCode === 13) {
+                    <Grid item xs={2}>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        onClick={() => {
                           send_message({
                             variables: { text: message, user: me?.id, chat: chat.id }
                           });
                           setMessage("");
-                        }
-                      }}
-                    />
+                        }}>
+                        <i className='fa fa-send'></i>
+                      </Button>
+                    </Grid>
                   </Grid>
-
-                  <Grid item xs={2}>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={() => {
-                        send_message({
-                          variables: { text: message, user: me?.id, chat: chat.id }
-                        });
-                        setMessage("");
-                      }}>
-                      <i className='fa fa-send'></i>
-                    </Button>
-                  </Grid>
-                </Grid>
-              </TabPanel>
-            ))}
+                </TabPanel>
+              ))}
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
+    </>
   );
 }
 
