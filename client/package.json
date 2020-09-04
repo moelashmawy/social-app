@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build --output public",
-    "start": "next start -p $PORT"
+    "build": "next build",
+    "start": "next start",
+    "generate:graphql": "gql-gen"
   },
   "dependencies": {
     "@apollo/client": "^3.0.2",

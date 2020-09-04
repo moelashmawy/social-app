@@ -33,10 +33,7 @@ const options = {
   playground: "/graphql",
   cors: {
     credentials: true,
-    origin:
-      process.env.NODE_ENV === "production"
-        ? [process.env.HEROKU_URL]
-        : ["http://localhost:3000"] // your frontend url.
+    origin: "http://localhost:3000" // your frontend url.
   }
 };
 

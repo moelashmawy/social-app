@@ -35,11 +35,9 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "ts-node -r esm index.ts",
-    "server": "nodemon -r esm index.ts",
-    "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd client/ && npm install && npm run build"
+    "dev:backend": "nodemon -r esm index.ts",
+    "dev:frontend": "npm run dev --prefix client",
+    "dev": "concurrently --kill-others npm:dev:*"
   },
   "author": "Mohamed Elashmawy",
   "license": "MIT"
