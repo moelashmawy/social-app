@@ -2,13 +2,6 @@
 
 const chatTypeDef = `
 
-  type Message {
-    id: ID
-    text: String!
-    user: User!
-    chat: Chat!
-  }
-
   type Chat{
     id: ID!
     users: [User!]
@@ -21,23 +14,11 @@ const chatTypeDef = `
     chats: [Chat!]
   }
 
-  type MessagePayload{
-    ok: Boolean!
-    error: String
-    successMessage: String
-  }
-
   type NewChatPayload{
     ok: Boolean!
     chat: Chat
     error: String
     successMessage: String
-  }
-
-  type SendMessageSubPayload{
-    ok: Boolean!
-    error: String
-    chat: Chat!
   }
 
   extend type Query{
@@ -46,14 +27,7 @@ const chatTypeDef = `
 
   extend type Mutation {
     createNewChat(users:[ID!]):NewChatPayload!
-
-    sendMessage(text: String!, user: ID!, chat: ID): MessagePayload!
-  } 
-
-  extend type Subscription {
-    userChats: SendMessageSubPayload
   }
-  
 
 `;
 
