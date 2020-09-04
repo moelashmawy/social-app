@@ -204,6 +204,7 @@ export const ALL_USER_CHATS_QUERY = gql`
         messages {
           id
           text
+          createdAt
           user {
             id
             userName
