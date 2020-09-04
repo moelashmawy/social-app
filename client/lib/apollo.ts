@@ -1,11 +1,10 @@
 import { useMemo } from "react";
-import { ApolloClient, HttpLink, InMemoryCache, ApolloLink, split } from "@apollo/client";
+import { ApolloClient, InMemoryCache, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import Cookies from "js-cookie";
 import fetch from "isomorphic-unfetch";
 import { createUploadLink } from "apollo-upload-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { RetryLink } from "apollo-link-retry";
 import { getMainDefinition } from "apollo-utilities";
 
 let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
@@ -16,7 +15,7 @@ const isBrowser = typeof window !== "undefined";
 const httpLink = createUploadLink({
   uri:
     process.env.NODE_ENV == "production"
-      ? "https://yarab-yshtaghal.herokuapp.com/graphql"
+      ? `${process.env.HEROKU_URL}graphql`
       : "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
