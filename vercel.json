@@ -9,7 +9,7 @@
       "use": "@now/static"
     },
     {
-      "src": "client/package.json",
+      "src": "client/next.config.js",
       "use": "@now/next"
     }
   ],
