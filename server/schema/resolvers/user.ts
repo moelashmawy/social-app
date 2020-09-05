@@ -208,7 +208,7 @@ const userResolver = {
           expires: new Date(Date.now() + 900000),
           httpOnly: true,
           secure: true,
-          domain: "https://huhuhu.vercel.app" && "https://huhuhu.vercel.app",
+          domain: "huhuhu.vercel.app",
           path: "/"
         });
 
@@ -253,7 +253,7 @@ const userResolver = {
           expires: new Date(Date.now() + 18000000),
           httpOnly: true,
           secure: true,
-          domain: "https://huhuhu.vercel.app",
+          domain: "huhuhu.vercel.app",
           path: "/"
         });
 
@@ -268,7 +268,7 @@ const userResolver = {
     //logout Mutation
     logout: async (_: any, __: any, { res }) => {
       res.clearCookie("token", {
-        domain: "https://huhuhu.vercel.app",
+        domain: "huhuhu.vercel.app",
         path: "/"
       });
 
