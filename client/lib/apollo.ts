@@ -21,7 +21,7 @@ const httpLink = createUploadLink({
   fetch
 });
 
-/* // websocket link
+// websocket link
 const wsLink = process.browser
   ? new WebSocketLink({
       uri:
@@ -45,7 +45,7 @@ const splitLink = process.browser
       wsLink,
       httpLink as any
     )
-  : httpLink; */
+  : httpLink;
 
 // will user `setContext` to send the token with every request
 const authLink = setContext((_, { headers }) => {
@@ -71,7 +71,7 @@ function createApolloClient() {
   return new ApolloClient({
     uri: "/graphql",
     ssrMode: !isBrowser,
-    link: authLink.concat(httpLink as any),
+    link: authLink.concat(splitLink as any),
     cache: new InMemoryCache()
   });
 }
