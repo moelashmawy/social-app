@@ -32,6 +32,7 @@
     "react": "16.13.1",
     "react-awesome-slider": "^4.1.0",
     "react-dom": "^16.13.1",
+    "react-swipeable-views": "^0.13.9",
     "react-typed": "^1.2.0",
     "sass": "^1.26.10",
     "subscriptions-transport-ws": "^0.9.18",
