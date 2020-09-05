@@ -15,7 +15,7 @@ const isBrowser = typeof window !== "undefined";
 const httpLink = createUploadLink({
   uri:
     process.env.NODE_ENV == "production"
-      ? `${process.env.SERVER_URL}/graphql`
+      ? `https://huhuhu.vercel.app/graphql`
       : "http://localhost:5000/graphql", // Server URL (must be absolute)
   credentials: "include", // Additional fetch() options like `credentials` or `headers`
   fetch
@@ -24,7 +24,10 @@ const httpLink = createUploadLink({
 // websocket link
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: `ws://localhost:5000/subscriptions`,
+      uri:
+        process.env.NODE_ENV == "production"
+          ? `ws://huhuhu.vercel.app/subscriptions`
+          : `ws://localhost:5000/subscriptions`,
       options: { reconnect: true }
     })
   : null;
