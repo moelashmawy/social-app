@@ -2,35 +2,29 @@
   "version": 2,
   "builds": [{
       "src": "server/index.ts",
-      "use": "@now/node-server"
+      "use": "@now/node"
     },
     {
       "src": "client/*",
       "use": "@now/static"
     },
     {
-      "src": "client/next.config.js",
+      "src": "client/package.json",
       "use": "@now/next"
     }
   ],
   "routes": [{
-      "src": "/graphql",
+      "src": "/server(.*)",
       "dest": "server/index.ts"
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1",
-      "headers": {
-        "x-request-path": "$1"
-      }
+      "dest": "client/$1"
     }, {
       "handle": "filesystem"
     }, {
       "src": "/(.*)",
-      "dest": "client/$1.html",
-      "headers": {
-        "x-request-path": "$1"
-      }
+      "dest": "client/$1.html"
     }
   ],
   "env": {

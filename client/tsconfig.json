@@ -15,5 +15,12 @@
     "jsx": "preserve"
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/apollo.ts", "next.config.js"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "lib/*",
+    "next.config.js",
+    "pages/**/*"
+  ]
 }
