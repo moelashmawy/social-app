@@ -82,7 +82,6 @@ function User(props) {
             ) : (
               <title>{user.userName}'s Profile</title>
             )}
-            <link rel='icon' href='/favicon.ico' />
           </Head>
 
           <Grid container className='profile-page'>

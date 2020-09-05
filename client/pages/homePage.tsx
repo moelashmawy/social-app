@@ -31,7 +31,6 @@ function homePage(props) {
     <>
       <Head>
         <title>Social App</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <div className={`home-page-body ${classes.root}`}>

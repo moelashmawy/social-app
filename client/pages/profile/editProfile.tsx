@@ -33,7 +33,6 @@ const editProfile = props => {
     <>
       <Head>
         <title>My Profile - Update</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <Grid container>

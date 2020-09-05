@@ -37,7 +37,6 @@ export default function index(props) {
     <>
       <Head>
         <title>Bookmarks</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       {data?.deleteBookmark.ok && (

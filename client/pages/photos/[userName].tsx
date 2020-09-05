@@ -88,7 +88,6 @@ function UserPhotos(props) {
             ) : (
               <title>{user.userName}'s Photos</title>
             )}
-            <link rel='icon' href='/favicon.ico' />
           </Head>
           <div>Photos</div>
 

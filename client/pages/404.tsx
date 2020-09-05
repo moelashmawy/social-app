@@ -8,7 +8,6 @@ function PageNotFound(props) {
     <>
       <Head>
         <title>{`404 :(`}</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <div>

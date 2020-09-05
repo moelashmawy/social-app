@@ -174,7 +174,6 @@ export default function index(props: any) {
     <>
       <Head>
         <title>Chat</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <div className={classes.root}>

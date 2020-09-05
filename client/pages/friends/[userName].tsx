@@ -26,7 +26,6 @@ const Friends = props => {
     <>
       <Head>
         <title>Friends</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
       <Grid container>
         {me.id === props.user.user.id && (

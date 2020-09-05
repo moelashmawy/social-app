@@ -15,7 +15,6 @@ function Home(props) {
     <>
       <Head>
         <title>Social App</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <h1>Welcome</h1>
