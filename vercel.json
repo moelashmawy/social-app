@@ -1,17 +1,19 @@
 {
   "version": 2,
-  "builds": [
-    {
+  "builds": [{
       "src": "server/index.ts",
       "use": "@now/node-server"
     },
     {
       "src": "client/*",
       "use": "@now/static"
+    },
+    {
+      "src": "client/next.config.js",
+      "use": "@now/next"
     }
   ],
-  "routes": [
-    {
+  "routes": [{
       "src": "/graphql",
       "dest": "server/index.ts"
     },

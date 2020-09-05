@@ -26,7 +26,7 @@ const wsLink = process.browser
   ? new WebSocketLink({
       uri:
         process.env.NODE_ENV == "production"
-          ? `ws://huhuhu.vercel.app/subscriptions`
+          ? `wss://huhuhu.vercel.app/subscriptions`
           : `ws://localhost:5000/subscriptions`,
       options: { reconnect: true }
     })
