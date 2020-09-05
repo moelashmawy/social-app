@@ -107,7 +107,7 @@ const userResolver = {
     // one user query
     userInfo: async (_: any, { userName }, { req }) => {
       try {
-        await userAuth(req);
+        //await userAuth(req);
 
         let user = await User.findOne({ userName: userName })
           .populate({
