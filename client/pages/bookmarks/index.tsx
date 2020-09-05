@@ -10,6 +10,9 @@ import { Button } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import { DELETE_BOOKMARK_MUTATION } from "../../graphql/mutations";
 import ErrorMessage from "../../components/ToastMessage";
+import { ME_QUERY } from "../../graphql/queries";
+import { initializeApollo } from "../../lib/apollo";
+import Head from "next/head";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function index(props) {
-  let { bookmarks } = props.data.me.user;
+  let bookmarks = props.me.bookmarks;
 
   const [userBookmarks, setUserBookmarks] = useState(bookmarks);
 
@@ -32,6 +35,11 @@ export default function index(props) {
 
   return (
     <>
+      <Head>
+        <title>Bookmarks</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+
       {data?.deleteBookmark.ok && (
         <ErrorMessage message={data.deleteBookmark.successMessage} case='success' />
       )}
@@ -69,4 +77,34 @@ export default function index(props) {
       )}
     </>
   );
+}
+
+// Fetch necessary data for the blog post using params.id
+export async function getServerSideProps(ctx) {
+  //redirect if there is no authentcated user
+  if (!ctx.req.headers.cookie) {
+    ctx.res.writeHead(302, {
+      // or 301
+      Location: "/"
+    });
+    ctx.res.end();
+  }
+
+  const apolloClient = initializeApollo();
+
+  // get the cookies from the headers in the request object
+  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
+
+  let oneUserQuery = await apolloClient.query({
+    query: ME_QUERY
+  });
+
+  let me = oneUserQuery.data.me.user;
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+      me: me
+    }
+  };
 }
