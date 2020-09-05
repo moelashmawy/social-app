@@ -22,7 +22,7 @@ const httpLink = createUploadLink({
 });
 
 // websocket link
-const wsLink = process.browser
+const wsLink = isBrowser
   ? new WebSocketLink({
       uri:
         process.env.NODE_ENV == "production"
@@ -33,7 +33,7 @@ const wsLink = process.browser
   : null;
 
 // splitLink decides which link to use
-const splitLink = process.browser
+const splitLink = isBrowser
   ? split(
       ({ query }) => {
         const definition = getMainDefinition(query);
