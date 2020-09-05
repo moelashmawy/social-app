@@ -34,6 +34,7 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
+    "postinstall": "cd client && npm install",
     "client-install": "npm install --prefix client",
     "dev:backend": "nodemon -r esm index.ts",
     "dev:frontend": "npm run dev --prefix client",
