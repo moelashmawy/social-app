@@ -9,7 +9,7 @@
         "dest": "server/index.ts"
     }],
     "env": {
-        "DB_URI": "mongodb+srv://hamo246:0452504270@cluster0-7ckqn.azure.mongodb.net/local_library?retryWrites:true",
+        "DB_URI": "mongodb+srv://hamo246:0452504270@cluster0-7ckqn.azure.mongodb.net/local_library",
         "JWT_SECRET": "iDontHaveAnySecrets",
         "CLOUDINARY_CLOUD_NAME": "hamohuh",
         "CLOUDINARY_API_KEY": "838736889631699",
