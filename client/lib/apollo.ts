@@ -6,6 +6,7 @@ import fetch from "isomorphic-unfetch";
 import { createUploadLink } from "apollo-upload-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "apollo-utilities";
+import * as ws from "ws";
 
 let apolloClient: ApolloClient<import("@apollo/client").NormalizedCacheObject>;
 let token: string;
@@ -26,9 +27,10 @@ const wsLink = process.browser
   ? new WebSocketLink({
       uri:
         process.env.NODE_ENV == "production"
-          ? `ws://huhuhu.vercel.app/subscriptions`
+          ? `wss://huhuhu.vercel.app/subscriptions`
           : `ws://localhost:5000/subscriptions`,
-      options: { reconnect: true }
+      options: { reconnect: true },
+      webSocketImpl: isBrowser ? null : ws
     })
   : null;
 
