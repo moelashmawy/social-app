@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [{
         "src": "server/index.ts",
-        "use": "@vercel/node"
+        "use": "@now/node-server"
     }],
     "routes": [{
         "src": "/graphql",
