@@ -23,11 +23,11 @@
     },
     {
       "src": "/users(\\?[^/]+)",
-      "dest": "client/pages/users/userName$1"
+      "dest": "client/pages/users/$1"
     },
     {
       "src": "/users/(.*)",
-      "dest": "client/pages/users/[userName]"
+      "dest": "client/pages/users/$1"
     }
   ],
   "env": {
