@@ -66,7 +66,7 @@ function Header(props) {
           )}
 
           {me.ok && (
-            <Link href='/profile/editProfile'>
+            <Link href='/profile/editProfile' as='/profile/editProfile'>
               <a>Settings</a>
             </Link>
           )}
