@@ -35,7 +35,7 @@ const options = {
     credentials: true,
     origin:
       process.env.NODE_ENV == "production"
-        ? "https://huhuhu.vercel.app"
+        ? "https://monorepo1.herokuapp.com" //"https://huhuhu.vercel.app"
         : "http://localhost:3000" // your frontend url.
   }
 };
