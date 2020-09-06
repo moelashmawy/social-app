@@ -19,12 +19,8 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/client/$1"
-    }, {
-      "handle": "filesystem"
-    }, {
-      "src": "/(.*)",
-      "dest": "/client/$1.html"
+      "dest": "/client/$1",
+      "continue": true
     }
   ],
   "env": {
