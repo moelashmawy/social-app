@@ -20,6 +20,14 @@
     {
       "src": "/(.*)",
       "dest": "client/$1"
+    },
+    {
+      "src": "/users(\\?[^/]+)",
+      "dest": "client/pages/users/userName$1"
+    },
+    {
+      "src": "/users/(.*)",
+      "dest": "client/pages/users/[userName]"
     }
   ],
   "env": {
