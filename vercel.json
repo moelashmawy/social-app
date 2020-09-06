@@ -19,15 +19,12 @@
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1"
-    },
-    {
-      "src": "/users(\\?[^/]+)",
-      "dest": "client/pages/users/$1"
-    },
-    {
-      "src": "/users/(.*)",
-      "dest": "client/pages/users/$1"
+      "dest": "/client/$1"
+    }, {
+      "handle": "filesystem"
+    }, {
+      "src": "/(.*)",
+      "dest": "/client/$1.html"
     }
   ],
   "env": {
