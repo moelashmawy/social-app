@@ -1,8 +1,83 @@
-.container {
-  background-color: #f5f5f5;
-  padding: 0 5%;
-}
-
 .home-page-body {
-  background-color: white;
+
+  .user-greeting {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid black;
+
+    /* user acatar */
+    .home-page-user-avatar {
+
+      height: 70px !important;
+      width: 70px !important;
+      margin-left: 50%;
+
+    }
+
+    /* auto typing section */
+    .home-page-typed {
+      .home-page-username {
+        color: rgb(59, 18, 24);
+        font-size: 20px;
+        font-weight: 600;
+        margin-right: 5px;
+      }
+
+      span {
+        &:nth-child(2) {
+          color: #000;
+        }
+      }
+    }
+  }
+
+  /* random users list */
+  .some-random-users {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 50px;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+
+    /*  */
+    .heading {
+      margin: 0 auto;
+      border-bottom: 1px dashed #6d6fd3;
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* one user card */
+    .one-user-card {
+      margin: 0 auto;
+
+      .MuiAvatar-circle {
+        width: 55px;
+        height: 55px;
+        margin: 0 auto;
+        margin-bottom: 20px
+      }
+
+      .one-user-url {
+        display: block;
+        text-align: center;
+        margin-bottom: 2px;
+
+        &:hover {
+          color: #6d6fd3;
+          border-bottom: 1px dashed #6d6fd3;
+          transition: all ease .5s;
+        }
+
+      }
+
+      .one-user-country {
+        text-align: center;
+        font-size: 12px;
+        color: #acacac;
+      }
+    }
+  }
+
+
 }

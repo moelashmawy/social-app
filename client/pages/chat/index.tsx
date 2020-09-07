@@ -111,7 +111,7 @@ export default function index(props: any) {
   const AlwaysScrollToBottom: any = () => {
     useEffect(() => {
       var list: any = document.getElementById("chat-list");
-      list.scrollTop = list.scrollHeight;
+      if (list) list.scrollTop = list.scrollHeight;
     });
   };
   AlwaysScrollToBottom();
@@ -179,26 +179,40 @@ export default function index(props: any) {
       <div className={classes.root}>
         {/* all chats container */}
         <Grid container className='all-chats'>
+          {/* if there are no converstions show message */}
+          {userChats.length == 0 && (
+            <div className='empty-message'>
+              There are no conversations,{" "}
+              {
+                <Link href='/'>
+                  <a>make new friends</a>
+                </Link>
+              }{" "}
+            </div>
+          )}
+
           {/* all user chat tabs */}
-          <Grid xs={12} md={3} item className='all-tabs'>
-            <Tabs
-              orientation='vertical'
-              variant='scrollable'
-              value={value}
-              onChange={handleChange}
-              aria-label='Vertical tabs example'
-              className={classes.tabs}>
-              {userChats &&
-                userChats.map((chat, index) => (
-                  <Tab
-                    className='one-tap'
-                    key={chat.id}
-                    label={chat.users[0].firstName + ", " + chat.users[1].firstName}
-                    {...a11yProps(index)}
-                  />
-                ))}
-            </Tabs>
-          </Grid>
+          {userChats.length > 0 && (
+            <Grid xs={12} md={3} item className='all-tabs'>
+              <Tabs
+                orientation='vertical'
+                variant='scrollable'
+                value={value}
+                onChange={handleChange}
+                aria-label='Vertical tabs example'
+                className={classes.tabs}>
+                {userChats &&
+                  userChats.map((chat, index) => (
+                    <Tab
+                      className='one-tap'
+                      key={chat.id}
+                      label={chat.users[0].firstName + ", " + chat.users[1].firstName}
+                      {...a11yProps(index)}
+                    />
+                  ))}
+              </Tabs>
+            </Grid>
+          )}
 
           {/* the chosen tab panel from the above tab */}
           <Grid xs={12} md={9} item className='one-tabPanels'>
@@ -260,9 +274,6 @@ export async function getServerSideProps(ctx) {
   }
 
   const apolloClient = initializeApollo();
-
-  // get the cookies from the headers in the request object
-  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
 
   let oneUserQuery = await apolloClient.query({
     query: ALL_USER_CHATS_QUERY

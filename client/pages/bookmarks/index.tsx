@@ -6,7 +6,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Link from "next/link";
-import { Button } from "@material-ui/core";
+import { Grid, IconButton, Tooltip } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { useMutation } from "@apollo/client";
 import { DELETE_BOOKMARK_MUTATION } from "../../graphql/mutations";
 import ErrorMessage from "../../components/ToastMessage";
@@ -47,33 +48,64 @@ export default function index(props) {
         <ErrorMessage message={data.deleteBookmark.error} case='error' />
       )}
 
-      {userBookmarks.length == 0 && <div>Your Bookmarks is empty</div>}
+      <Grid container className='bookmarks-page friends-page'>
+        {/* left section */}
+        <Grid container item md={8} className='left-side'>
+          {userBookmarks.length == 0 && (
+            <div className='empty-message'>
+              Your bookmarks is empty,{" "}
+              {
+                <Link href='/'>
+                  <a>get to know people.</a>
+                </Link>
+              }{" "}
+            </div>
+          )}
 
-      {userBookmarks.length > 0 && (
-        <List className={classes.root}>
-          {userBookmarks.map(user => (
-            <ListItem key={user.id}>
-              <ListItemAvatar>
-                <Avatar src={user.avatarUrl} />
-              </ListItemAvatar>
-              <Link href='/users/[userName]' as={`/users/${user.userName}`}>
-                <a>
-                  <ListItemText primary={user.firstName + " " + user.lastName} />
-                </a>
-              </Link>
-              <Button
-                onClick={() => {
-                  delete_bookmark({ variables: { id: user.id } });
-                  setUserBookmarks(
-                    userBookmarks.filter(bookmark => bookmark.id !== user.id)
-                  );
-                }}>
-                Delete
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-      )}
+          {userBookmarks.length > 0 &&
+            userBookmarks.map(user => (
+              <Grid
+                container
+                key={user.id}
+                className='one-friend'
+                alignContent='flex-start'
+                alignItems='center'>
+                {/* photo  */}
+                <Grid item xs={2}>
+                  <Avatar src={user.avatarUrl} />
+                </Grid>
+
+                {/* username */}
+                <Grid item xs={5}>
+                  <Link href={"/users/[userName]"} as={`/users/${user.userName}`}>
+                    <a>{user.firstName + " " + user.lastName}</a>
+                  </Link>
+                </Grid>
+
+                {/* delete button */}
+                <Grid item xs={5}>
+                  <Tooltip title='Delete'>
+                    <IconButton aria-label='delete'>
+                      <DeleteIcon
+                        onClick={() => {
+                          delete_bookmark({ variables: { id: user.id } });
+                          setUserBookmarks(
+                            userBookmarks.filter(bookmark => bookmark.id !== user.id)
+                          );
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            ))}
+        </Grid>
+
+        {/* right section */}
+        <Grid item md={4}>
+          right side
+        </Grid>
+      </Grid>
     </>
   );
 }

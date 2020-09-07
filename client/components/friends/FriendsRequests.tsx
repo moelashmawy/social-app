@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, Avatar, Button } from "@material-ui/core";
 import Link from "next/link";
 import { useMutation } from "@apollo/client";
@@ -6,11 +6,20 @@ import { ACCEPT_FRIEND_MUTATION } from "../../graphql/mutations";
 import ErrorMessage from "../ToastMessage";
 
 const FriendsRequests = ({ requests }) => {
+  // handle accept friend mutation
   const [accept_friend, { data, loading }] = useMutation(ACCEPT_FRIEND_MUTATION);
 
-  if (data) {
-    console.log(data);
-  }
+  const [allRequests, setAllRequests] = useState(requests);
+
+  // handle accept friend state
+  const handleAcceptFriends = friendId => {
+    accept_friend({ variables: { id: friendId } });
+
+    const requestsAfterAccept = requests.filter(friend => friend.id !== friendId);
+
+    setAllRequests(requestsAfterAccept);
+  };
+
   return (
     <Grid container>
       {data?.acceptFriend.ok && (
@@ -21,8 +30,8 @@ const FriendsRequests = ({ requests }) => {
 
       {requests?.length > 0 &&
         requests.map(requestt => (
-          <Grid container>
-            <Grid item xs={2}>
+          <Grid container className='one-friend' alignItems='center'>
+            <Grid item xs={3}>
               <Avatar src={requestt.avatarUrl} />
             </Grid>
             <Grid item xs={5}>
@@ -31,10 +40,10 @@ const FriendsRequests = ({ requests }) => {
               </Link>
             </Grid>
 
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <Button
                 onClick={() => {
-                  accept_friend({ variables: { id: requestt.id } });
+                  handleAcceptFriends(requestt.id);
                 }}>
                 Confirm
               </Button>

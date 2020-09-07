@@ -17,8 +17,11 @@ const Layout = props => {
           href='https://spilart.com/wp-content/uploads/2019/04/cim.png'
         />
       </Head>
+
       <Header me={props.me} />
+
       {props.children}
+
       <Footer />
     </div>
   );

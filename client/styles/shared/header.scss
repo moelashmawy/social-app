@@ -2,6 +2,17 @@
 .main-header {
     padding-top: 20px;
 
+    .MuiPaper-elevation0 {
+        margin-top: 20px;
+    }
+
+    .MuiAppBar-positionFixed {
+        transition: all ease-in-out .3s;
+        max-width: 90% !important;
+        right: unset;
+        left: unset;
+    }
+
     .MuiToolbar-root {
 
         /* header link */

@@ -6,18 +6,66 @@ import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
-import TabPanel from "@material-ui/lab/TabPanel";
-import { Grid } from "@material-ui/core";
+import { Box, Grid, makeStyles, Tabs, Typography, useTheme } from "@material-ui/core";
 import FriendsRequests from "../../components/friends/FriendsRequests";
 import FriendsList from "../../components/friends/FriendsList";
+import { Theme } from "@material-ui/core/styles";
+import SwipeableViews from "react-swipeable-views";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: any;
+  value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role='tabpanel'
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: any) {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`
+  };
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    width: 500
+  }
+}));
 
 const Friends = props => {
   let me = props.data.me.user;
 
-  const [value, setValue] = React.useState("Friends");
+  const classes = useStyles();
+  const theme = useTheme();
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleChangeIndex = (index: number) => {
+    setValue(index);
   };
 
   const showDeleteFriend = me.id === props.user.user.id;
@@ -27,48 +75,42 @@ const Friends = props => {
       <Head>
         <title>Friends</title>
       </Head>
-      <Grid container>
-        {me.id === props.user.user.id && (
-          <Grid xs={8} item>
-            <TabContext value={value}>
-              <AppBar position='static'>
-                <TabList onChange={handleChange} aria-label='simple tabs example'>
-                  <Tab label='Friends' value='Friends' />
+      <Grid container className='friends-page'>
+        {/* swipeable friends and requests list */}
+        <Grid xs={8} item className={`${classes.root} left-side`}>
+          <AppBar position='static' color='default'>
+            {/* friends and requests tabs */}
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor='primary'
+              textColor='primary'
+              variant='fullWidth'
+              aria-label='full width tabs example'>
+              <Tab label='friends' {...a11yProps(0)} />
+              {me.id === props.user.user.id && <Tab label='Requests' {...a11yProps(1)} />}
+            </Tabs>
+          </AppBar>
 
-                  <Tab label='Friend requests' value='Friend requests' />
-                </TabList>
-              </AppBar>
-              <TabPanel value='Friends'>
-                <FriendsList
-                  showDeleteFriend={showDeleteFriend}
-                  friends={props.user.user.friends}
-                />
-              </TabPanel>
+          {/* every tab content */}
+          <SwipeableViews
+            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+            index={value}
+            onChangeIndex={handleChangeIndex}>
+            <TabPanel value={value} index={0} dir={theme.direction}>
+              <FriendsList
+                showDeleteFriend={showDeleteFriend}
+                friends={props.user.user.friends}
+              />
+            </TabPanel>
 
-              <TabPanel value='Friend requests'>
+            {me.id === props.user.user.id && (
+              <TabPanel value={value} index={1} dir={theme.direction}>
                 <FriendsRequests requests={props.user.user.friendsPending} />
               </TabPanel>
-            </TabContext>
-          </Grid>
-        )}
-
-        {me.id !== props.user.user.id && (
-          <Grid xs={8} item>
-            <TabContext value={value}>
-              <AppBar position='static'>
-                <TabList onChange={handleChange} aria-label='simple tabs example'>
-                  <Tab label='Friends' value='Friends' />
-                </TabList>
-              </AppBar>
-              <TabPanel value='Friends'>
-                <FriendsList
-                  showDeleteFriend={showDeleteFriend}
-                  friends={props.user.user.friends}
-                />
-              </TabPanel>
-            </TabContext>
-          </Grid>
-        )}
+            )}
+          </SwipeableViews>
+        </Grid>
 
         <Grid item xs={4}>
           Right Side

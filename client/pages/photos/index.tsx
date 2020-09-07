@@ -9,6 +9,7 @@ import { DELETE_PICTURE, CHOOSE_PROFILE_PICTURE } from "../../graphql/mutations"
 import UploadProfileImages from "../../components/UploadProfileImages";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+import HeaderProfile from "../../components/shared/HeaderProfile";
 
 function UserPhotos(props) {
   // extract the logged in user

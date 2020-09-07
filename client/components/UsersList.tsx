@@ -1,10 +1,8 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import Link from "next/link";
 import ErrorMessage from "./ToastMessage";
 import Button from "@material-ui/core/Button";
-import { useState } from "react";
 import { MUTATION_DELETE_USER } from "../graphql/mutations";
-import { ALL_USERS_QUERY } from "../graphql/queries";
 
 export default function UsersList(props) {
   const { users, error, ok } = props.users;

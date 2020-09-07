@@ -4,6 +4,7 @@ import UsersList from "../components/UsersList";
 import { ALL_USERS_QUERY } from "../graphql/queries";
 import { Grid, createStyles, makeStyles, Theme, Avatar } from "@material-ui/core";
 import Link from "next/link";
+import Typed from "react-typed";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +28,15 @@ function homePage(props) {
   let { me, loading } = props.data;
   let { error, ok, user } = me;
 
+  //calculate user age depends on his birthday
+  const userAge = birthday => {
+    let birthDate = new Date(birthday);
+    let nowDate = new Date();
+
+    let years = nowDate.getFullYear() - birthDate.getFullYear();
+    return <span>{years}</span>;
+  };
+
   return (
     <>
       <Head>
@@ -35,40 +45,63 @@ function homePage(props) {
 
       <div className={`home-page-body ${classes.root}`}>
         <Grid container>
-          {/* Profile Info */}
-          <Grid container item xs={8} className={`${classes.root}`}>
-            <Grid container>
+          {/* left section */}
+          <Grid container item md={8} xs={12} className={`${classes.root}`}>
+            {/* user greetings */}
+            <Grid container className='user-greeting'>
+              {/* user infi */}
               <Grid item xs={3}>
-                <Avatar alt='my pic' src={user?.avatarUrl} />
-                <div>{user?.userName}</div>
+                <Avatar
+                  variant='rounded'
+                  alt='my pic'
+                  src={user?.avatarUrl}
+                  className='home-page-user-avatar'
+                />
               </Grid>
-              <Grid item xs={9}>
-                <h3>Hi, {user?.firstName}! Get started making new friends!</h3>
-                <Grid container item xs={12} className={`${classes.root}`} spacing={1}>
-                  <Grid item>Edit profile</Grid>
-                  <Grid item>Add photos</Grid>
-                  <Grid item>Invite friends</Grid>
-                  <Grid item>Search</Grid>
-                  <Grid item>Forums</Grid>
-                </Grid>
+
+              {/* home page typed */}
+              <Grid item xs={9} className='home-page-typed'>
+                {/* username */}
+                <Typed
+                  className='home-page-username'
+                  strings={[`Hi ${user.firstName}!`]}
+                  typeSpeed={80}
+                  showCursor={false}
+                />
+                <Typed
+                  strings={[
+                    "Start Making new friends.",
+                    "discover new cultures.",
+                    "practice languages.",
+                    "Have a good day <3"
+                  ]}
+                  typeSpeed={80}
+                  loop
+                  startDelay={2000}
+                />
               </Grid>
             </Grid>
 
-            <Grid container>
-              {/* Quick search */}
-              <Grid container item xs={12} className={`${classes.root}`}>
+            {/* Quick search */}
+            <Grid container item xs={12} className={`${classes.root} some-random-users`}>
+              <p className='heading'>Make new friends</p>
+
+              {/* some random users */}
+              <Grid container>
                 {users &&
                   users.map(user => (
-                    <Grid item key={user.id}>
-                      <Avatar alt='my pic' src={user.avatarUrl} />
+                    /* one user */
+                    <Grid className='one-user-card' item key={user.id} xs={3} md={2}>
                       <Link href={"/users/[userName]"} as={`/users/${user.userName}`}>
-                        <a>{user.userName}</a>
+                        <a className='one-user-url'>
+                          <>
+                            <Avatar alt='user image' src={user.avatarUrl} />
+                            {user.firstName}, {userAge(user.birthday)}
+                          </>
+                        </a>
                       </Link>
-                      <div>{user.userName}</div>
-                      <div>{user.email}</div>
-                      <div>{user.firstName}</div>
-                      <div>{user.lastName}</div>
-                      <div>{user.createdAt}</div>
+
+                      <div className='one-user-country'>{user.country}</div>
                     </Grid>
                   ))}
               </Grid>
@@ -80,16 +113,21 @@ function homePage(props) {
             Right Side
           </Grid>
         </Grid>
-        <UsersList users={props.users} />
       </div>
     </>
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  const apolloClient = initializeApollo();
+export async function getServerSideProps({ req, res }) {
+  if (!req.headers.cookie) {
+    res.writeHead(302, {
+      // or 301
+      Location: "/"
+    });
+    res.end();
+  }
 
-  const token = ctx.req.headers.cookie ? ctx.req.headers.cookie : null;
+  const apolloClient = initializeApollo();
 
   const allUsers = await apolloClient.query({
     query: ALL_USERS_QUERY

@@ -46,6 +46,7 @@ export default function HeaderProfile({ me }) {
       </span>
 
       <Popover
+        disableScrollLock={true}
         id={id}
         open={open}
         anchorEl={anchorEl}

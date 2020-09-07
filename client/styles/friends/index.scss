@@ -1,0 +1,26 @@
+.friends-page {
+    min-height: 500px;
+    margin: 25px 0;
+
+    .left-side {
+        .one-friend {
+            margin-top: 15px;
+
+            .MuiAvatar-circle {
+                width: 65px;
+                height: 65px;
+            }
+
+            a {
+                border-bottom: 1px dashed #6d6fd3;
+                transition: ease-in-out all .2s;
+
+                &:hover {
+                    color:
+                        #6d6fd3;
+                }
+            }
+        }
+
+    }
+}
