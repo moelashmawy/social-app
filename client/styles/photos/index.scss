@@ -1,0 +1,60 @@
+.user-photos-page {
+    padding: 24px;
+
+    /* all photos section */
+    .all-photos {
+
+        /* one item */
+        .one-item {
+            margin: 20px 0;
+            border-bottom: 1px dashed #6d6fd3;
+            padding-bottom: 20px;
+
+            /* the photo */
+            .MuiAvatar-root {
+                height: 90px;
+                width: 90px;
+            }
+        }
+    }
+
+    /* upload photos section */
+    .upload-photos-form {
+        border-left: 1px dashed #6d6fd3;
+        align-content: flex-start;
+
+        /* the header */
+        h3 {
+            text-align: center;
+        }
+
+        /* the form iteself */
+        form {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* every photo with delete sign */
+        .each-item {
+            margin-top: 20px;
+
+            .wrapper {
+                position: relative;
+            }
+
+            .MuiAvatar-rounded {
+                width: 70px;
+                height: 70px;
+            }
+
+            .delete-item {
+                position: absolute;
+                top: -10px;
+                left: -5px;
+                cursor: pointer;
+                font-size: 15px;
+            }
+        }
+    }
+}
