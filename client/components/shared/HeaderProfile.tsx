@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+/* This component renders the current logged in acount on the navbar(header) */
 export default function HeaderProfile({ me }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);

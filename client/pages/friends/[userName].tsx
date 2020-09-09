@@ -64,6 +64,7 @@ const Friends = props => {
     setValue(newValue);
   };
 
+  /* handle change material ui tabs index */
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };

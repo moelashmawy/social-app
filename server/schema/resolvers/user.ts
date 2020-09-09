@@ -208,7 +208,7 @@ const userResolver = {
           expires: new Date(Date.now() + 900000),
           httpOnly: true,
           secure: true,
-          domain: "huhuhu.vercel.app", //"localhost", //
+          domain: process.env.DOMAIN_URI, // your domain name eg "xoxo.com", "localhost"
           path: "/"
         });
 
@@ -253,7 +253,7 @@ const userResolver = {
           expires: new Date(Date.now() + 18000000),
           httpOnly: true,
           secure: true,
-          domain: "huhuhu.vercel.app", //"localhost", //
+          domain: process.env.DOMAIN_URI, // your domain name eg "xoxo.com", "localhost"
           path: "/"
         });
 
@@ -268,7 +268,7 @@ const userResolver = {
     //logout Mutation
     logout: async (_: any, __: any, { res }) => {
       res.clearCookie("token", {
-        domain: "huhuhu.vercel.app", //"localhost", //
+        domain: process.env.DOMAIN_URI, // your domain name eg "xoxo.com", "localhost"
         path: "/"
       });
 

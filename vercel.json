@@ -29,6 +29,7 @@
     "CLOUDINARY_CLOUD_NAME": "hamohuh",
     "CLOUDINARY_API_KEY": "838736889631699",
     "CLOUDINARY_API_SECRET": "4V8gR-toRb1FCVmfmD5nM-mGL5M",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "DOMAIN_URI": "huhuhu.vercel.app"
   }
 }
