@@ -35,8 +35,7 @@
   },
   "scripts": {
     "postinstall": "cd client && npm install",
-    "start": "ts-node -r esm server/index.ts",
-    "client-install": "npm install --prefix client",
+    "start": "nodemon server/index.ts",
     "dev:backend": "nodemon -r esm server/index.ts",
     "dev:frontend": "npm run dev --prefix client",
     "dev": "concurrently --kill-others npm:dev:*"
