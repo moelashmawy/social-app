@@ -4,7 +4,7 @@
 
 > Built with MERN stack (MongoDB, Express, React and Node) + (GrapgQL).
 
-### <h2 align="center"> ⚡️⚡️⚡️ &nbsp; [Live Demo](huhuhu.vercel.app/) ⚡️⚡️⚡️ </h2>
+### <h2 align="center"> ⚡️⚡️⚡️ &nbsp; [Live Demo](https://huhuhu.vercel.app/) ⚡️⚡️⚡️ </h2>
 
 > PS. The realtime chat doesn't work on the live demo, cause vercel doesn't support WS,
 > but it works fine on localhost, and will deploy ot to another host once it's done.
@@ -62,16 +62,18 @@ $ npm run dev:frontend (for React client side development)
 $ npm run dev (for both client and server side)
 ```
 
-## #️⃣ &nbsp; Env-Variables
+## #️⃣ &nbsp;
+
+## 💻 &nbsp; Env-Variables
 
 > Please consider adding these envirnment variables to have the app working
 
-DB_URI=mongodb+srv://<username>:<password>@cluster0-7ckqn.azure.mongodb.net/local_library
-JWT_SECRET=your JWT secret
-CLOUDINARY_CLOUD_NAME=this one is for images upload on cloudinary
-CLOUDINARY_API_KEY=also for cloudinary
-CLOUDINARY_API_SECRET=also for cloudinary
-DOMAIN_URI=(if you're on localhost keep it "localhost", if you will deploy it put the URL)
+DB_URI=mongodb+srv://<username>:<password>@cluster0-7ckqn.azure.mongodb.net/local_library.
+JWT_SECRET = your JWT secret.
+CLOUDINARY_CLOUD_NAME = this one is for images upload on cloudinary.
+CLOUDINARY_API_KEY = also for cloudinary.
+CLOUDINARY_API_SECRET = also for cloudinary.
+DOMAIN_URI = (if you're on localhost keep it "localhost", if you will deploy it put the URL).
 
 # Author
 
