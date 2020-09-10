@@ -3,3 +3,25 @@
 @import './about-me.scss';
 @import './languages.scss';
 @import './settings.scss';
+
+/* genaral style */
+.profile-settings-page {
+    min-height: 550px;
+    margin-bottom: 35px;
+
+    .left-side>div:first-of-type {
+        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+    }
+
+}
+
+.react-swipeable-view-container {
+
+    div[data-swipeable] {
+        background-color: #fff;
+        min-height: 400px;
+        margin-top: 3px;
+    }
+
+
+}

@@ -23,7 +23,7 @@ const server = new GraphQLServer({
 });
 
 // database connection
-//connectDb();
+connectDb();
 
 // Server connection options
 const options = {
@@ -35,7 +35,7 @@ const options = {
     credentials: true,
     origin:
       process.env.NODE_ENV == "production"
-        ? "https://monorepo1.herokuapp.com" //https://huhuhu.vercel.app"
+        ? "https://huhuhu.vercel.app"
         : "http://localhost:3000" // your frontend url.
   }
 };

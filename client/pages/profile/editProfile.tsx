@@ -108,20 +108,23 @@ const editProfile = props => {
             axis={theme.direction === "rtl" ? "x-reverse" : "x"}
             index={value}
             onChangeIndex={handleChangeIndex}>
+            {/* each tab details */}
             <TabPanel value={value} index={0} dir={theme.direction}>
               <General me={user} />
             </TabPanel>
 
             <TabPanel value={value} index={1} dir={theme.direction}>
-              {" "}
               <Contact me={user} />
             </TabPanel>
+
             <TabPanel value={value} index={2} dir={theme.direction}>
               <AboutMe me={user} />
             </TabPanel>
+
             <TabPanel value={value} index={3} dir={theme.direction}>
               <Languages me={user} />
             </TabPanel>
+
             <TabPanel value={value} index={4} dir={theme.direction}>
               Settings
             </TabPanel>
