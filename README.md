@@ -80,7 +80,7 @@ DOMAIN_URI = (if you're on localhost keep it "localhost", if you will deploy it 
 👤 &nbsp; **Mohamed Elashmawy**
 
 - Twitter: [@hamohuh](https://twitter.com/hamohuh)
-- Github: [@hamohuh](https://github.com/hamohuh)
+- Github: [@moelashmawy](https://github.com/moelashmawy)
 - Linkedin: [@mo-elashmawy](https://www.linkedin.com/in/mo-elashmawy/)
 - Email: [mohamed.elashmawy894@gmail.com](mailto:mohamed.elashmawy894@gmail.com)
 
