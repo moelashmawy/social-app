@@ -82,7 +82,7 @@ DOMAIN_URI = (if you're on localhost keep it "localhost", if you will deploy it 
 - Twitter: [@hamohuh](https://twitter.com/hamohuh)
 - Github: [@moelashmawy](https://github.com/moelashmawy)
 - Linkedin: [@moelashmawy](https://www.linkedin.com/in/moelashmawy/)
-- Email: [mohamed.elashmawy894@gmail.com](mailto:mohamed.elashmawy894@gmail.com)
+- Email: [ashmawy894@gmail.com](mailto:ashmawy894@gmail.com)
 
 ## 📝 &nbsp; License
 
